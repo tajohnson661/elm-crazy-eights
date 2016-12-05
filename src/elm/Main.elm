@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Utils
 
 
 -- component import example
@@ -29,22 +30,15 @@ suits =
 
 allCards : List a -> List b -> List ( a, b )
 allCards faces suits =
-    case suits of
-        x :: xs ->
-            family faces x ++ allCards faces xs
-
-        _ ->
-            []
+    Utils.listsToTupleList faces suits
 
 
-family : List a -> b -> List ( a, b )
-family faces suit =
-    case faces of
-        x :: xs ->
-            (,) x suit :: family xs suit
 
-        _ ->
-            []
+{--
+allCardsMap : List a -> List b -> List ( a, b )
+allCardsMap faces suits =
+    Utils.listsToTupleListMap faces suits
+--}
 
 
 deck : List Card
