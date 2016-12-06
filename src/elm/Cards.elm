@@ -45,11 +45,11 @@ shuffleDeck deck seed =
         |> Tuple.second
 
 
-dealCards : Maybe (List Card) -> ( List Card, List Card, List Card )
+dealCards : Maybe (List Card) -> ( List Card, List Card, List Card, List Card )
 dealCards deck =
     case deck of
         Nothing ->
-            ( [], [], [] )
+            ( [], [], [], [] )
 
         Just deck ->
             let
@@ -62,10 +62,16 @@ dealCards deck =
                 dealerDeck =
                     List.take 8 remainingDeck
 
-                finalDeck =
+                nextRemainingDeck =
                     List.drop 8 remainingDeck
+
+                discardPile =
+                    List.take 1 nextRemainingDeck
+
+                finalDeck =
+                    List.drop 1 nextRemainingDeck
             in
-                ( finalDeck, playerDeck, dealerDeck )
+                ( finalDeck, playerDeck, dealerDeck, discardPile )
 
 
 

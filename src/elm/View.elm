@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Model exposing (Model)
 import Messages exposing (..)
-import Html exposing (Html, div, text, button, span, p, img)
+import Html exposing (Html, div, text, button, span, p, img, h3)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
 import Cards exposing (Card)
@@ -20,10 +20,7 @@ view model =
           div [ class "row" ]
             [ div [ class "col-xs-12" ]
                 [ div [ class "jumbotron" ]
-                    [ img [ src "static/img/elm.jpg", style styles.img ] []
-                      -- inline CSS (via var)
-                    , p [] [ text ("Elm Webpack Starter") ]
-                    , button [ class "btn btn-primary btn-lg", onClick StartShuffle ]
+                    [ button [ class "btn btn-primary btn-lg", onClick StartShuffle ]
                         [ -- click handler
                           span [ class "glyphicon glyphicon-star" ] []
                           -- glyphicon
@@ -31,11 +28,14 @@ view model =
                         ]
                     , button [ class "btn btn-primary btn-lg", onClick Deal ]
                         [ text "Deal new hand" ]
+                    , viewDiscardPile model.discardPile
                     ]
                 ]
             ]
+        , h3 [] [ text "Player Hand " ]
         , div [ class "row" ]
             [ viewHand model.playerHand ]
+        , h3 [] [ text "Dealer Hand" ]
         , div [ class "row" ]
             [ viewHand model.dealerHand ]
         ]
@@ -49,7 +49,17 @@ viewHand hand =
 
 viewCard : Card -> Html Msg
 viewCard card =
-    text ((toFace (Tuple.first card)) ++ " of " ++ (toSuit (Tuple.second card)))
+    p [] [ text ((toFace (Tuple.first card)) ++ " of " ++ (toSuit (Tuple.second card))) ]
+
+
+viewDiscardPile : List Card -> Html Msg
+viewDiscardPile discardPile =
+    case (List.head discardPile) of
+        Nothing ->
+            div [] []
+
+        Just card ->
+            div [] [ viewCard card ]
 
 
 toFace : Int -> String

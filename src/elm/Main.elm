@@ -47,13 +47,14 @@ update msg model =
 
         Deal ->
             let
-                ( remainingDeck, playerHand, dealerHand ) =
+                ( remainingDeck, playerHand, dealerHand, discardPile ) =
                     Cards.dealCards model.shuffledDeck
             in
                 ( { model
                     | shuffledDeck = Just remainingDeck
                     , playerHand = playerHand
                     , dealerHand = dealerHand
+                    , discardPile = discardPile
                   }
                 , Cmd.none
                 )
