@@ -2,10 +2,10 @@ module View exposing (view)
 
 import Model exposing (Model)
 import Messages exposing (..)
-import Html exposing (Html, div, text, button, span, p, img, h3)
+import Html exposing (Html, div, text, button, span, p, img, h3, ul, li)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
-import Cards exposing (Card)
+import Cards exposing (Card, Suit)
 
 
 -- VIEW
@@ -35,21 +35,41 @@ view model =
         , h3 [] [ text "Player Hand " ]
         , div [ class "row" ]
             [ viewHand model.playerHand ]
-        , h3 [] [ text "Dealer Hand" ]
-        , div [ class "row" ]
-            [ viewHand model.dealerHand ]
         ]
 
 
 viewHand : List Card -> Html Msg
 viewHand hand =
-    div []
+    ul [ class "list-group" ]
         (List.map viewCard hand)
 
 
 viewCard : Card -> Html Msg
 viewCard card =
-    p [] [ text ((toFace (Tuple.first card)) ++ " of " ++ (toSuit (Tuple.second card))) ]
+    li [ class "list-group-item" ]
+        [ text ((toFace (Tuple.first card)) ++ " of " ++ (toSuit (Tuple.second card)))
+        , img [ src (imageFromSuit (Tuple.second card)), style styles.img ] []
+        , button [ class "btn btn-primary" ] [ text "Play this card" ]
+        ]
+
+
+imageFromSuit : Suit -> String
+imageFromSuit suit =
+    case suit of
+        'H' ->
+            "static/img/heart.png"
+
+        'S' ->
+            "static/img/spade.png"
+
+        'C' ->
+            "static/img/club.gif"
+
+        'D' ->
+            "static/img/diamond.png"
+
+        _ ->
+            "static/img/heart1.png"
 
 
 viewDiscardPile : List Card -> Html Msg
@@ -59,7 +79,7 @@ viewDiscardPile discardPile =
             div [] []
 
         Just card ->
-            div [] [ viewCard card ]
+            div [] [ text ((toFace (Tuple.first card)) ++ " of " ++ (toSuit (Tuple.second card))) ]
 
 
 toFace : Int -> String
@@ -134,7 +154,8 @@ toSuit suitValue =
 styles : { img : List ( String, String ) }
 styles =
     { img =
-        [ ( "width", "33%" )
-        , ( "border", "4px solid #337AB7" )
+        [ ( "width", "20px" )
+        , ( "height", "20px" )
+        , ( "border", "1px solid #337AB7" )
         ]
     }
