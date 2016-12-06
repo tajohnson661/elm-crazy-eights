@@ -1,4 +1,4 @@
-module Cards exposing (Card, Face, Suit, shuffleDeck, initialDeck)
+module Cards exposing (Card, Face, Suit, shuffleDeck, initialDeck, dealCards)
 
 import Utils
 import Random
@@ -43,6 +43,29 @@ shuffleDeck deck seed =
         |> List.sortBy Tuple.first
         |> List.unzip
         |> Tuple.second
+
+
+dealCards : Maybe (List Card) -> ( List Card, List Card, List Card )
+dealCards deck =
+    case deck of
+        Nothing ->
+            ( [], [], [] )
+
+        Just deck ->
+            let
+                playerDeck =
+                    List.take 8 deck
+
+                remainingDeck =
+                    List.drop 8 deck
+
+                dealerDeck =
+                    List.take 8 remainingDeck
+
+                finalDeck =
+                    List.drop 8 remainingDeck
+            in
+                ( finalDeck, playerDeck, dealerDeck )
 
 
 
