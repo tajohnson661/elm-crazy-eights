@@ -45,7 +45,7 @@ viewHand hand =
 viewCard : Card -> Html Msg
 viewCard card =
     li [ class "list-group-item" ]
-        [ text ((toFace (Tuple.first card)) ++ " of " ++ (toSuit (Tuple.second card)))
+        [ text (toFace (Tuple.first card))
         , img [ src (imageFromSuit (Tuple.second card)), style styles.img ] []
         , button [ class "btn btn-primary" ] [ text "Play this card" ]
         ]
@@ -77,7 +77,10 @@ viewDiscardPile discardPile =
             div [] []
 
         Just card ->
-            div [] [ text ((toFace (Tuple.first card)) ++ " of " ++ (toSuit (Tuple.second card))) ]
+            div [ class "discard-pile" ]
+                [ text (toFace (Tuple.first card))
+                , img [ src (imageFromSuit (Tuple.second card)), style styles.img ] []
+                ]
 
 
 toFace : Int -> String
@@ -85,33 +88,6 @@ toFace faceValue =
     case faceValue of
         1 ->
             "Ace"
-
-        2 ->
-            "Two"
-
-        3 ->
-            "Three"
-
-        4 ->
-            "Four"
-
-        5 ->
-            "Five"
-
-        6 ->
-            "Six"
-
-        7 ->
-            "Seven"
-
-        8 ->
-            "Eight"
-
-        9 ->
-            "Nine"
-
-        10 ->
-            "Ten"
 
         11 ->
             "Jack"
@@ -123,26 +99,7 @@ toFace faceValue =
             "King"
 
         _ ->
-            "Other"
-
-
-toSuit : Char -> String
-toSuit suitValue =
-    case suitValue of
-        'H' ->
-            "Hearts"
-
-        'D' ->
-            "Diamonds"
-
-        'S' ->
-            "Spades"
-
-        'C' ->
-            "Clubs"
-
-        _ ->
-            "Unknown"
+            (toString faceValue)
 
 
 
@@ -154,6 +111,6 @@ styles =
     { img =
         [ ( "width", "20px" )
         , ( "height", "20px" )
-        , ( "border", "1px solid #337AB7" )
+        , ( "margin", "4px" )
         ]
     }
