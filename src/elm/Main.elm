@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Model exposing (Model)
+import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
 import Cards exposing (Card)
 import Ports
@@ -36,25 +36,25 @@ update msg model =
                 | shuffledDeck = Nothing
                 , playerHand = []
                 , dealerHand = []
+                , whoseTurn = None
               }
             , Ports.getTime ()
             )
 
-        ShuffleDeck timeVal ->
-            ( { model | shuffledDeck = Just (Cards.shuffleDeck Cards.initialDeck timeVal) }
-            , Cmd.none
-            )
-
-        Deal ->
+        ShuffleDeckAndDeal timeVal ->
             let
+                shuffledDeck =
+                    Just (Cards.shuffleDeck Cards.initialDeck timeVal)
+
                 ( remainingDeck, playerHand, dealerHand, discardPile ) =
-                    Cards.dealCards model.shuffledDeck
+                    Cards.dealCards shuffledDeck
             in
                 ( { model
                     | shuffledDeck = Just remainingDeck
                     , playerHand = playerHand
                     , dealerHand = dealerHand
                     , discardPile = discardPile
+                    , whoseTurn = Player
                   }
                 , Cmd.none
                 )
@@ -71,4 +71,4 @@ subscriptions model =
 
 mapLoadTime : Int -> Msg
 mapLoadTime timeVal =
-    ShuffleDeck timeVal
+    ShuffleDeckAndDeal timeVal

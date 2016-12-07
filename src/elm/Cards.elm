@@ -1,4 +1,4 @@
-module Cards exposing (Card, Face, Suit, shuffleDeck, initialDeck, dealCards)
+module Cards exposing (Card, Face, Suit, shuffleDeck, initialDeck, dealCards, getSuitFromCard, getFaceFromCard, isCardPlayable)
 
 import Utils
 import Random
@@ -72,6 +72,33 @@ dealCards deck =
                     List.drop 1 nextRemainingDeck
             in
                 ( finalDeck, playerDeck, dealerDeck, discardPile )
+
+
+getFaceFromCard : Card -> Face
+getFaceFromCard card =
+    Tuple.first card
+
+
+getSuitFromCard : Card -> Suit
+getSuitFromCard card =
+    Tuple.second card
+
+
+isCardPlayable : Card -> Maybe Card -> Bool
+isCardPlayable card maybeTopOfDiscard =
+    case maybeTopOfDiscard of
+        Nothing ->
+            False
+
+        Just topOfDiscard ->
+            if getFaceFromCard card == 8 then
+                True
+            else if getFaceFromCard card == getFaceFromCard topOfDiscard then
+                True
+            else if getSuitFromCard card == getSuitFromCard topOfDiscard then
+                True
+            else
+                False
 
 
 
