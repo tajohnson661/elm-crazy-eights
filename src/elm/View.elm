@@ -5,7 +5,7 @@ import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h3, ul, li)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
-import Cards exposing (Card, Suit)
+import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard, isCardPlayable)
 
 
 -- VIEW
@@ -15,40 +15,54 @@ import Cards exposing (Card, Suit)
 
 view : Model -> Html Msg
 view model =
-    div [ class "container", style [ ( "margin-top", "30px" ), ( "text-align", "center" ) ] ]
-        [ -- inline CSS (literal)
-          div [ class "row" ]
-            [ div [ class "col-xs-12" ]
-                [ div [ class "jumbotron" ]
-                    [ button [ class "btn btn-primary btn-lg", onClick StartShuffle ]
-                        [ -- click handler
-                          span [ class "glyphicon glyphicon-star" ] []
-                          -- glyphicon
-                        , span [] [ text "New game" ]
+    let
+        compareCard =
+            List.head model.discardPile
+    in
+        div [ class "container", style [ ( "margin-top", "30px" ), ( "text-align", "center" ) ] ]
+            [ -- inline CSS (literal)
+              div [ class "row" ]
+                [ div [ class "col-xs-12" ]
+                    [ div [ class "jumbotron" ]
+                        [ button [ class "btn btn-primary btn-lg", onClick StartShuffle ]
+                            [ -- click handler
+                              span [ class "glyphicon glyphicon-star" ] []
+                              -- glyphicon
+                            , span [] [ text "New game" ]
+                            ]
+                        , viewDiscardPile model.discardPile
                         ]
-                    , viewDiscardPile model.discardPile
                     ]
                 ]
+            , h3 [] [ text "Player Hand " ]
+            , div [ class "row" ]
+                [ viewHand model.playerHand compareCard ]
             ]
-        , h3 [] [ text "Player Hand " ]
-        , div [ class "row" ]
-            [ viewHand model.playerHand ]
-        ]
 
 
-viewHand : List Card -> Html Msg
-viewHand hand =
+viewHand : List Card -> Maybe Card -> Html Msg
+viewHand hand compareCard =
     ul [ class "list-group" ]
-        (List.map viewCard hand)
+        (List.map (viewCard compareCard) hand)
 
 
-viewCard : Card -> Html Msg
-viewCard card =
+viewCard : Maybe Card -> Card -> Html Msg
+viewCard compareCard card =
     li [ class "list-group-item" ]
-        [ text (toFace (Tuple.first card))
-        , img [ src (imageFromSuit (Tuple.second card)), style styles.img ] []
-        , button [ class "btn btn-primary" ] [ text "Play this card" ]
+        [ text (toFaceName (getFaceFromCard card))
+        , img [ src (imageFromSuit (getSuitFromCard card)), style styles.img ] []
+        , viewPlayButton card compareCard
         ]
+
+
+viewPlayButton : Card -> Maybe Card -> Html Msg
+viewPlayButton card compareCard =
+    case isCardPlayable card compareCard of
+        True ->
+            button [ class "btn btn-primary" ] [ text "Play this card" ]
+
+        False ->
+            div [] []
 
 
 imageFromSuit : Suit -> String
@@ -78,13 +92,13 @@ viewDiscardPile discardPile =
 
         Just card ->
             div [ class "discard-pile" ]
-                [ text (toFace (Tuple.first card))
-                , img [ src (imageFromSuit (Tuple.second card)), style styles.img ] []
+                [ text (toFaceName (getFaceFromCard card))
+                , img [ src (imageFromSuit (getSuitFromCard card)), style styles.img ] []
                 ]
 
 
-toFace : Int -> String
-toFace faceValue =
+toFaceName : Int -> String
+toFaceName faceValue =
     case faceValue of
         1 ->
             "Ace"
@@ -103,7 +117,7 @@ toFace faceValue =
 
 
 
--- CSS STYLES
+-- CSS STYLES in line... really just to see how it's done.  Should be in CSS file
 
 
 styles : { img : List ( String, String ) }
