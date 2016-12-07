@@ -1,4 +1,4 @@
-module Model exposing (Model, init)
+module Model exposing (Model, init, WhoseTurn(..))
 
 import Cards exposing (Card)
 import Messages exposing (..)
@@ -10,6 +10,7 @@ import Messages exposing (..)
 type WhoseTurn
     = Player
     | Dealer
+    | None
 
 
 type alias Model =
@@ -18,7 +19,6 @@ type alias Model =
     , dealerHand : List Card
     , discardPile : List Card
     , whoseTurn : WhoseTurn
-    , inProgress : Bool
     }
 
 
@@ -28,8 +28,7 @@ init =
       , playerHand = []
       , dealerHand = []
       , discardPile = []
-      , whoseTurn = Player
-      , inProgress = False
+      , whoseTurn = None
       }
     , Cmd.none
     )

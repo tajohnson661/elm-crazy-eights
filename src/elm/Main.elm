@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Model exposing (Model)
+import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
 import Cards exposing (Card)
 import Ports
@@ -36,7 +36,7 @@ update msg model =
                 | shuffledDeck = Nothing
                 , playerHand = []
                 , dealerHand = []
-                , inProgress = False
+                , whoseTurn = None
               }
             , Ports.getTime ()
             )
@@ -54,7 +54,7 @@ update msg model =
                     , playerHand = playerHand
                     , dealerHand = dealerHand
                     , discardPile = discardPile
-                    , inProgress = True
+                    , whoseTurn = Player
                   }
                 , Cmd.none
                 )
