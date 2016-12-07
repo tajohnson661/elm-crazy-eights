@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Model exposing (Model)
+import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h3, ul, li)
 import Html.Attributes exposing (class, style, src)
@@ -34,10 +34,22 @@ view model =
                         ]
                     ]
                 ]
+            , viewDrawCardButton model
             , h3 [] [ text "Player Hand " ]
             , div [ class "row" ]
                 [ viewHand model.playerHand compareCard ]
             ]
+
+
+viewDrawCardButton : Model -> Html Msg
+viewDrawCardButton model =
+    case model.whoseTurn of
+        Player ->
+            div [ class "row" ]
+                [ button [ class "btn btn-primary btn-lg", onClick DrawCard ] [ text "Draw Card " ] ]
+
+        _ ->
+            div [] []
 
 
 viewHand : List Card -> Maybe Card -> Html Msg

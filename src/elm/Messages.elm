@@ -5,3 +5,5 @@ type Msg
     = NoOp
     | StartShuffle
     | ShuffleDeckAndDeal Int
+    | DrawCard
+    | DealersTurn

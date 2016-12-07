@@ -59,6 +59,44 @@ update msg model =
                 , Cmd.none
                 )
 
+        DrawCard ->
+            ( drawCard model, Cmd.none )
+
+        DealersTurn ->
+            model ! []
+
+
+drawCard : Model -> Model
+drawCard model =
+    let
+        drawnCard =
+            getDeckTopCard model.shuffledDeck
+    in
+        case drawnCard of
+            Nothing ->
+                model
+
+            Just card ->
+                case model.shuffledDeck of
+                    Nothing ->
+                        model
+
+                    Just deck ->
+                        { model
+                            | shuffledDeck = List.tail deck
+                            , playerHand = card :: model.playerHand
+                        }
+
+
+getDeckTopCard : Maybe (List Card) -> Maybe Card
+getDeckTopCard maybeDeck =
+    case maybeDeck of
+        Nothing ->
+            Nothing
+
+        Just deck ->
+            List.head deck
+
 
 
 -- SUBSCRIPTIONS
