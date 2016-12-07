@@ -24,10 +24,8 @@ view model =
                         [ -- click handler
                           span [ class "glyphicon glyphicon-star" ] []
                           -- glyphicon
-                        , span [] [ text "Shuffle" ]
+                        , span [] [ text "New game" ]
                         ]
-                    , button [ class "btn btn-primary btn-lg", onClick Deal ]
-                        [ text "Deal new hand" ]
                     , viewDiscardPile model.discardPile
                     ]
                 ]
