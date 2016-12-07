@@ -5,6 +5,22 @@ import Expect
 import Fuzz exposing (list, int, tuple, string)
 import String
 import Cards exposing (isCardPlayable, Card, Face, Suit)
+import Utils exposing (listsToTupleList, listsToTupleListMap)
+
+
+faces : List Face
+faces =
+    [ 1, 2, 3, 4 ]
+
+
+suits : List Suit
+suits =
+    [ 'H', 'D' ]
+
+
+deck : List Card
+deck =
+    [ ( 1, 'H' ), ( 2, 'H' ), ( 3, 'H' ), ( 4, 'H' ), ( 1, 'D' ), ( 2, 'D' ), ( 3, 'D' ), ( 4, 'D' ) ]
 
 
 discardPile : List Card
@@ -35,11 +51,16 @@ all =
                 \() ->
                     Expect.equal (isCardPlayable card2 (List.head discardPile)) False
             ]
-        , describe "Model tests"
-            [ test "junk" <|
+        , describe "Util tests"
+            [ test "listsToTupleList" <|
                 \() ->
-                    True
+                    listsToTupleList faces suits
                         |> Expect.equal
-                            True
+                            deck
+            , test "listsToTupleListMap" <|
+                \() ->
+                    listsToTupleListMap faces suits
+                        |> Expect.equal
+                            deck
             ]
         ]
