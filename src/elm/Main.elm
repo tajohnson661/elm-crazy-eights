@@ -83,7 +83,52 @@ update msg model =
                 , Cmd.none
                 )
             else
+                update DealersTurnDone (dealerPlays model)
+
+        DealersTurnDone ->
+            if List.length model.dealerHand == 0 then
+                ( { model
+                    | message = "Dealer Wins!!!"
+                    , whoseTurn = None
+                  }
+                , Cmd.none
+                )
+            else
                 model ! []
+
+
+dealerPlays : Model -> Model
+dealerPlays model =
+    let
+        playableList =
+            List.filter (Cards.isCardPlayable (List.head model.discardPile)) model.dealerHand
+
+        cardToPlay =
+            List.head playableList
+    in
+        case cardToPlay of
+            Nothing ->
+                dealerDraws model
+
+            Just card ->
+                dealerPlaysCard card model
+
+
+dealerDraws : Model -> Model
+dealerDraws model =
+    model
+
+
+dealerPlaysCard : Card -> Model -> Model
+dealerPlaysCard card model =
+    let
+        newDealerHand =
+            removeCard card model.dealerHand
+    in
+        { model
+            | discardPile = card :: model.discardPile
+            , dealerHand = newDealerHand
+        }
 
 
 drawCard : Model -> Model

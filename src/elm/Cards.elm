@@ -92,8 +92,8 @@ getSuitFromCard card =
     Tuple.second card
 
 
-isCardPlayable : Card -> Maybe Card -> Bool
-isCardPlayable card maybeTopOfDiscard =
+isCardPlayable : Maybe Card -> Card -> Bool
+isCardPlayable maybeTopOfDiscard card =
     case maybeTopOfDiscard of
         Nothing ->
             False

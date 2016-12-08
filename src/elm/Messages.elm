@@ -10,3 +10,4 @@ type Msg
     | DrawCard
     | PlayCard Card
     | DealersTurn
+    | DealersTurnDone

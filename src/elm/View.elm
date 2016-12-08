@@ -73,7 +73,7 @@ viewCard compareCard card =
 
 viewPlayButton : Card -> Maybe Card -> Html Msg
 viewPlayButton card compareCard =
-    case isCardPlayable card compareCard of
+    case isCardPlayable compareCard card of
         True ->
             button [ class "btn btn-primary", onClick (PlayCard card) ] [ text "Play this card" ]
 
