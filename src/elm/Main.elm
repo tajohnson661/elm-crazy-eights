@@ -4,6 +4,7 @@ import Html exposing (..)
 import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
 import Cards exposing (Card, removeCard, getDeckTopCard)
+import GameLogic exposing (..)
 import Ports
 import View
 
@@ -95,103 +96,6 @@ update msg model =
                 )
             else
                 model ! []
-
-
-dealerPlays : Model -> Model
-dealerPlays model =
-    let
-        playableList =
-            List.filter (Cards.isCardPlayable (List.head model.discardPile)) model.dealerHand
-
-        cardToPlay =
-            List.head playableList
-    in
-        case cardToPlay of
-            Nothing ->
-                dealerDraws model
-
-            Just card ->
-                dealerPlaysCard card model
-
-
-dealerDraws : Model -> Model
-dealerDraws model =
-    model
-
-
-dealerPlaysCard : Card -> Model -> Model
-dealerPlaysCard card model =
-    let
-        newDealerHand =
-            removeCard card model.dealerHand
-    in
-        { model
-            | discardPile = card :: model.discardPile
-            , dealerHand = newDealerHand
-        }
-
-
-drawCard : Model -> Model
-drawCard model =
-    let
-        drawnCard =
-            getDeckTopCard model.shuffledDeck
-    in
-        case drawnCard of
-            Nothing ->
-                model
-
-            Just card ->
-                let
-                    newModel =
-                        reshuffleIfNecessary model
-                in
-                    { newModel | playerHand = card :: newModel.playerHand }
-
-
-reshuffleIfNecessary : Model -> Model
-reshuffleIfNecessary model =
-    case List.tail model.shuffledDeck of
-        Nothing ->
-            model
-
-        Just restOfDeck ->
-            if List.length restOfDeck == 0 then
-                reshuffle model
-            else
-                { model
-                    | shuffledDeck = restOfDeck
-                }
-
-
-reshuffle : Model -> Model
-reshuffle model =
-    let
-        newDeck =
-            List.tail model.discardPile
-
-        cardOnTopOfDiscardPile =
-            getDeckTopCard model.discardPile
-    in
-        case newDeck of
-            Nothing ->
-                { model
-                    | shuffledDeck = []
-                }
-
-            Just aNewDeck ->
-                case cardOnTopOfDiscardPile of
-                    Nothing ->
-                        { model
-                            | shuffledDeck = aNewDeck
-                        }
-
-                    Just card ->
-                        { model
-                            | shuffledDeck =
-                                Cards.shuffleDeck aNewDeck 1481219015621
-                            , discardPile = [ card ]
-                        }
 
 
 

@@ -8,7 +8,6 @@ module Cards
         , dealCards
         , getSuitFromCard
         , getFaceFromCard
-        , isCardPlayable
         , removeCard
         , getDeckTopCard
         )
@@ -92,23 +91,6 @@ getSuitFromCard card =
     Tuple.second card
 
 
-isCardPlayable : Maybe Card -> Card -> Bool
-isCardPlayable maybeTopOfDiscard card =
-    case maybeTopOfDiscard of
-        Nothing ->
-            False
-
-        Just topOfDiscard ->
-            if getFaceFromCard card == 8 then
-                True
-            else if getFaceFromCard card == getFaceFromCard topOfDiscard then
-                True
-            else if getSuitFromCard card == getSuitFromCard topOfDiscard then
-                True
-            else
-                False
-
-
 removeCard : Card -> List Card -> List Card
 removeCard card hand =
     List.filter ((/=) card) hand
@@ -117,14 +99,6 @@ removeCard card hand =
 getDeckTopCard : List Card -> Maybe Card
 getDeckTopCard deck =
     List.head deck
-
-
-
-{--
-allCardsMap : List a -> List b -> List ( a, b )
-allCardsMap faces suits =
-    Utils.listsToTupleListMap faces suits
---}
 
 
 initialDeck : List Card

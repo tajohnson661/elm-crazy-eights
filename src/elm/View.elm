@@ -5,7 +5,8 @@ import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h3, h4, ul, li)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
-import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard, isCardPlayable)
+import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard)
+import GameLogic exposing (..)
 
 
 -- VIEW
@@ -38,7 +39,7 @@ view model =
             , viewDrawCardButton model
             , h3 [] [ text "Player Hand " ]
             , div [ class "row" ]
-                [ viewHand model.playerHand compareCard ]
+                [ viewHand model.playerHand compareCard model.whoseTurn ]
             ]
 
 
@@ -56,28 +57,33 @@ viewDrawCardButton model =
             div [] []
 
 
-viewHand : List Card -> Maybe Card -> Html Msg
-viewHand hand compareCard =
+viewHand : List Card -> Maybe Card -> WhoseTurn -> Html Msg
+viewHand hand compareCard whoseTurn =
     ul [ class "list-group" ]
-        (List.map (viewCard compareCard) hand)
+        (List.map (viewCard compareCard whoseTurn) hand)
 
 
-viewCard : Maybe Card -> Card -> Html Msg
-viewCard compareCard card =
+viewCard : Maybe Card -> WhoseTurn -> Card -> Html Msg
+viewCard compareCard whoseTurn card =
     li [ class "list-group-item" ]
         [ text (toFaceName (getFaceFromCard card))
         , img [ src (imageFromSuit (getSuitFromCard card)), style styles.img ] []
-        , viewPlayButton card compareCard
+        , viewPlayButton card compareCard whoseTurn
         ]
 
 
-viewPlayButton : Card -> Maybe Card -> Html Msg
-viewPlayButton card compareCard =
-    case isCardPlayable compareCard card of
-        True ->
-            button [ class "btn btn-primary", onClick (PlayCard card) ] [ text "Play this card" ]
+viewPlayButton : Card -> Maybe Card -> WhoseTurn -> Html Msg
+viewPlayButton card compareCard whoseTurn =
+    case whoseTurn of
+        Player ->
+            case isCardPlayable compareCard card of
+                True ->
+                    button [ class "btn btn-primary", onClick (PlayCard card) ] [ text "Play this card" ]
 
-        False ->
+                False ->
+                    div [] []
+
+        _ ->
             div [] []
 
 
