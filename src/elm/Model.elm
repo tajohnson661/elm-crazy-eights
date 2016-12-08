@@ -21,6 +21,7 @@ type alias Model =
     , currentSuit : Suit
     , whoseTurn : WhoseTurn
     , message : String
+    , showDialog : Bool
     }
 
 
@@ -33,6 +34,7 @@ init =
       , currentSuit = 'H'
       , whoseTurn = None
       , message = ""
+      , showDialog = False
       }
     , Cmd.none
     )

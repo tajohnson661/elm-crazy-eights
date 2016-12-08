@@ -71,13 +71,13 @@ update msg model =
                     removeCard card model.playerHand
             in
                 if (Cards.getFaceFromCard card) == 8 then
-                    update DealersTurn
-                        (askUserForSuit
-                            { model
-                                | discardPile = card :: model.discardPile
-                                , playerHand = newPlayerHand
-                            }
-                        )
+                    ( askUserForSuit
+                        { model
+                            | discardPile = card :: model.discardPile
+                            , playerHand = newPlayerHand
+                        }
+                    , Cmd.none
+                    )
                 else
                     update DealersTurn
                         { model
@@ -108,11 +108,18 @@ update msg model =
             else
                 model ! []
 
+        Acknowledge suit ->
+            update DealersTurn
+                { model
+                    | showDialog = False
+                    , currentSuit = suit
+                }
+
 
 askUserForSuit : Model -> Model
 askUserForSuit model =
     { model
-        | currentSuit = 'D'
+        | showDialog = True
     }
 
 

@@ -7,6 +7,7 @@ import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
 import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard)
 import GameLogic exposing (..)
+import Dialog
 
 
 -- VIEW
@@ -38,10 +39,67 @@ view model =
                     ]
                 ]
             , viewDrawCardButton model
+            , Dialog.view
+                (if model.showDialog then
+                    Just (dialogConfig model)
+                 else
+                    Nothing
+                )
             , h3 [] [ text "Player Hand " ]
             , div [ class "row" ]
                 [ viewHand model.playerHand compareCard model.currentSuit model.whoseTurn ]
+            , div [ class "row" ]
+                [ div [ class "col-xs-12" ]
+                    [ div [ class "jumbotron" ]
+                        [ h4 [] [ text model.message ]
+                        , button [ class "btn btn-primary btn-lg", onClick StartShuffle ]
+                            [ -- click handler
+                              span [ class "glyphicon glyphicon-star" ] []
+                              -- glyphicon
+                            , span [] [ text "New game" ]
+                            ]
+                        , viewDiscardPile model.discardPile
+                        , viewCurrentSuit model.currentSuit
+                        ]
+                    ]
+                ]
             ]
+
+
+{-| A `Dialog.Config` is just a few piece of optional `Html`, plus "what do we do onClose?"
+-}
+dialogConfig : Model -> Dialog.Config Msg
+dialogConfig model =
+    { closeMessage = Nothing
+    , containerClass = Nothing
+    , header = Just (h3 [] [ text "Select a suit..." ])
+    , body = Just (text ("The counter ticks up to " ++ (toString 5) ++ "."))
+    , footer =
+        Just
+            (div []
+                [ button
+                    [ class "btn btn-success"
+                    , onClick (Acknowledge 'H')
+                    ]
+                    [ text "Hearts" ]
+                , button
+                    [ class "btn btn-success"
+                    , onClick (Acknowledge 'C')
+                    ]
+                    [ text "Clubs" ]
+                , button
+                    [ class "btn btn-success"
+                    , onClick (Acknowledge 'D')
+                    ]
+                    [ text "Diamonds" ]
+                , button
+                    [ class "btn btn-success"
+                    , onClick (Acknowledge 'S')
+                    ]
+                    [ text "Spades" ]
+                ]
+            )
+    }
 
 
 viewDrawCardButton : Model -> Html Msg

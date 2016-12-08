@@ -1,6 +1,6 @@
 module Messages exposing (..)
 
-import Cards exposing (Card)
+import Cards exposing (Card, Suit)
 
 
 type Msg
@@ -11,3 +11,4 @@ type Msg
     | PlayCard Card
     | DealersTurn
     | DealersTurnDone
+    | Acknowledge Suit
