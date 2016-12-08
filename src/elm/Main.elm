@@ -74,14 +74,6 @@ update msg model =
                         , playerHand = newPlayerHand
                     }
 
-        {--
-                ({ model
-                    | discardPile = card :: model.discardPile
-                    , playerHand = newPlayerHand
-                 }
-                    Cmd.none
-                )
-                --}
         DealersTurn ->
             if List.length model.playerHand == 0 then
                 ( { model
@@ -116,36 +108,45 @@ reshuffleIfNecessary : Model -> Model
 reshuffleIfNecessary model =
     case List.tail model.shuffledDeck of
         Nothing ->
-            let
-                newDeck =
-                    List.tail model.discardPile
-
-                cardOnTopOfDiscardPile =
-                    getDeckTopCard model.discardPile
-            in
-                case newDeck of
-                    Nothing ->
-                        { model
-                            | shuffledDeck = []
-                        }
-
-                    Just aNewDeck ->
-                        case cardOnTopOfDiscardPile of
-                            Nothing ->
-                                { model
-                                    | shuffledDeck = aNewDeck
-                                }
-
-                            Just card ->
-                                { model
-                                    | shuffledDeck = aNewDeck
-                                    , discardPile = [ card ]
-                                }
+            model
 
         Just restOfDeck ->
-            { model
-                | shuffledDeck = restOfDeck
-            }
+            if List.length restOfDeck == 0 then
+                reshuffle model
+            else
+                { model
+                    | shuffledDeck = restOfDeck
+                }
+
+
+reshuffle : Model -> Model
+reshuffle model =
+    let
+        newDeck =
+            List.tail model.discardPile
+
+        cardOnTopOfDiscardPile =
+            getDeckTopCard model.discardPile
+    in
+        case newDeck of
+            Nothing ->
+                { model
+                    | shuffledDeck = []
+                }
+
+            Just aNewDeck ->
+                case cardOnTopOfDiscardPile of
+                    Nothing ->
+                        { model
+                            | shuffledDeck = aNewDeck
+                        }
+
+                    Just card ->
+                        { model
+                            | shuffledDeck =
+                                Cards.shuffleDeck aNewDeck 1481219015621
+                            , discardPile = [ card ]
+                        }
 
 
 

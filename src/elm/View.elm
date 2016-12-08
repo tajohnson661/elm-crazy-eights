@@ -46,8 +46,11 @@ viewDrawCardButton : Model -> Html Msg
 viewDrawCardButton model =
     case model.whoseTurn of
         Player ->
-            div [ class "row" ]
-                [ button [ class "btn btn-primary btn-lg", onClick DrawCard ] [ text "Draw Card " ] ]
+            if List.length model.shuffledDeck == 0 then
+                div [] []
+            else
+                div [ class "row" ]
+                    [ button [ class "btn btn-primary btn-lg", onClick DrawCard ] [ text "Draw Card " ] ]
 
         _ ->
             div [] []
