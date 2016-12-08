@@ -62,8 +62,25 @@ update msg model =
         DrawCard ->
             ( drawCard model, Cmd.none )
 
+        PlayCard card ->
+            let
+                newPlayerHand =
+                    removeCard card model.playerHand
+            in
+                ( { model
+                    | discardPile = card :: model.discardPile
+                    , playerHand = newPlayerHand
+                  }
+                , Cmd.none
+                )
+
         DealersTurn ->
             model ! []
+
+
+removeCard : Card -> List Card -> List Card
+removeCard card hand =
+    List.filter ((/=) card) hand
 
 
 drawCard : Model -> Model
