@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
-import Html exposing (Html, div, text, button, span, p, img, h3, ul, li)
+import Html exposing (Html, div, text, button, span, p, img, h3, h4, ul, li)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
 import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard, isCardPlayable)
@@ -24,7 +24,8 @@ view model =
               div [ class "row" ]
                 [ div [ class "col-xs-12" ]
                     [ div [ class "jumbotron" ]
-                        [ button [ class "btn btn-primary btn-lg", onClick StartShuffle ]
+                        [ h4 [] [ text model.message ]
+                        , button [ class "btn btn-primary btn-lg", onClick StartShuffle ]
                             [ -- click handler
                               span [ class "glyphicon glyphicon-star" ] []
                               -- glyphicon

@@ -1,4 +1,17 @@
-module Cards exposing (Card, Face, Suit, shuffleDeck, initialDeck, dealCards, getSuitFromCard, getFaceFromCard, isCardPlayable)
+module Cards
+    exposing
+        ( Card
+        , Face
+        , Suit
+        , shuffleDeck
+        , initialDeck
+        , dealCards
+        , getSuitFromCard
+        , getFaceFromCard
+        , isCardPlayable
+        , removeCard
+        , getDeckTopCard
+        )
 
 import Utils
 import Random
@@ -45,33 +58,28 @@ shuffleDeck deck seed =
         |> Tuple.second
 
 
-dealCards : Maybe (List Card) -> ( List Card, List Card, List Card, List Card )
+dealCards : List Card -> ( List Card, List Card, List Card, List Card )
 dealCards deck =
-    case deck of
-        Nothing ->
-            ( [], [], [], [] )
+    let
+        playerDeck =
+            List.take 8 deck
 
-        Just deck ->
-            let
-                playerDeck =
-                    List.take 8 deck
+        remainingDeck =
+            List.drop 8 deck
 
-                remainingDeck =
-                    List.drop 8 deck
+        dealerDeck =
+            List.take 8 remainingDeck
 
-                dealerDeck =
-                    List.take 8 remainingDeck
+        nextRemainingDeck =
+            List.drop 8 remainingDeck
 
-                nextRemainingDeck =
-                    List.drop 8 remainingDeck
+        discardPile =
+            List.take 1 nextRemainingDeck
 
-                discardPile =
-                    List.take 1 nextRemainingDeck
-
-                finalDeck =
-                    List.drop 1 nextRemainingDeck
-            in
-                ( finalDeck, playerDeck, dealerDeck, discardPile )
+        finalDeck =
+            List.drop 1 nextRemainingDeck
+    in
+        ( finalDeck, playerDeck, dealerDeck, discardPile )
 
 
 getFaceFromCard : Card -> Face
@@ -99,6 +107,16 @@ isCardPlayable card maybeTopOfDiscard =
                 True
             else
                 False
+
+
+removeCard : Card -> List Card -> List Card
+removeCard card hand =
+    List.filter ((/=) card) hand
+
+
+getDeckTopCard : List Card -> Maybe Card
+getDeckTopCard deck =
+    List.head deck
 
 
 

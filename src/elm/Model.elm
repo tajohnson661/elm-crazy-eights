@@ -14,21 +14,23 @@ type WhoseTurn
 
 
 type alias Model =
-    { shuffledDeck : Maybe (List Card)
+    { shuffledDeck : List Card
     , playerHand : List Card
     , dealerHand : List Card
     , discardPile : List Card
     , whoseTurn : WhoseTurn
+    , message : String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { shuffledDeck = Nothing
+    ( { shuffledDeck = []
       , playerHand = []
       , dealerHand = []
       , discardPile = []
       , whoseTurn = None
+      , message = ""
       }
     , Cmd.none
     )

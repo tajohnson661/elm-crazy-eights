@@ -3,7 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
-import Cards exposing (Card)
+import Cards exposing (Card, removeCard, getDeckTopCard)
 import Ports
 import View
 
@@ -33,10 +33,11 @@ update msg model =
 
         StartShuffle ->
             ( { model
-                | shuffledDeck = Nothing
+                | shuffledDeck = []
                 , playerHand = []
                 , dealerHand = []
                 , whoseTurn = None
+                , message = ""
               }
             , Ports.getTime ()
             )
@@ -44,13 +45,13 @@ update msg model =
         ShuffleDeckAndDeal timeVal ->
             let
                 shuffledDeck =
-                    Just (Cards.shuffleDeck Cards.initialDeck timeVal)
+                    Cards.shuffleDeck Cards.initialDeck timeVal
 
                 ( remainingDeck, playerHand, dealerHand, discardPile ) =
                     Cards.dealCards shuffledDeck
             in
                 ( { model
-                    | shuffledDeck = Just remainingDeck
+                    | shuffledDeck = remainingDeck
                     , playerHand = playerHand
                     , dealerHand = dealerHand
                     , discardPile = discardPile
@@ -67,20 +68,30 @@ update msg model =
                 newPlayerHand =
                     removeCard card model.playerHand
             in
-                ( { model
+                update DealersTurn
+                    { model
+                        | discardPile = card :: model.discardPile
+                        , playerHand = newPlayerHand
+                    }
+
+        {--
+                ({ model
                     | discardPile = card :: model.discardPile
                     , playerHand = newPlayerHand
+                 }
+                    Cmd.none
+                )
+                --}
+        DealersTurn ->
+            if List.length model.playerHand == 0 then
+                ( { model
+                    | message = "You Win!!!"
+                    , whoseTurn = None
                   }
                 , Cmd.none
                 )
-
-        DealersTurn ->
-            model ! []
-
-
-removeCard : Card -> List Card -> List Card
-removeCard card hand =
-    List.filter ((/=) card) hand
+            else
+                model ! []
 
 
 drawCard : Model -> Model
@@ -94,25 +105,47 @@ drawCard model =
                 model
 
             Just card ->
-                case model.shuffledDeck of
-                    Nothing ->
-                        model
+                let
+                    newModel =
+                        reshuffleIfNecessary model
+                in
+                    { newModel | playerHand = card :: newModel.playerHand }
 
-                    Just deck ->
+
+reshuffleIfNecessary : Model -> Model
+reshuffleIfNecessary model =
+    case List.tail model.shuffledDeck of
+        Nothing ->
+            let
+                newDeck =
+                    List.tail model.discardPile
+
+                cardOnTopOfDiscardPile =
+                    getDeckTopCard model.discardPile
+            in
+                case newDeck of
+                    Nothing ->
                         { model
-                            | shuffledDeck = List.tail deck
-                            , playerHand = card :: model.playerHand
+                            | shuffledDeck = []
                         }
 
+                    Just aNewDeck ->
+                        case cardOnTopOfDiscardPile of
+                            Nothing ->
+                                { model
+                                    | shuffledDeck = aNewDeck
+                                }
 
-getDeckTopCard : Maybe (List Card) -> Maybe Card
-getDeckTopCard maybeDeck =
-    case maybeDeck of
-        Nothing ->
-            Nothing
+                            Just card ->
+                                { model
+                                    | shuffledDeck = aNewDeck
+                                    , discardPile = [ card ]
+                                }
 
-        Just deck ->
-            List.head deck
+        Just restOfDeck ->
+            { model
+                | shuffledDeck = restOfDeck
+            }
 
 
 
