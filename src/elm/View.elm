@@ -122,8 +122,12 @@ viewDiscardPile discardPile =
 
 viewCurrentSuit : Suit -> Html Msg
 viewCurrentSuit suit =
-    div [ class "discard-pile" ]
-        [ img [ src (imageFromSuit suit), style styles.img ] [] ]
+    div []
+        [ div [] [ text "current suit" ]
+        , div [ class "discard-pile" ]
+            [ img [ src (imageFromSuit suit), style styles.img ] []
+            ]
+        ]
 
 
 toFaceName : Int -> String

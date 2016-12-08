@@ -70,12 +70,21 @@ update msg model =
                 newPlayerHand =
                     removeCard card model.playerHand
             in
-                update DealersTurn
-                    { model
-                        | discardPile = card :: model.discardPile
-                        , playerHand = newPlayerHand
-                        , currentSuit = Cards.getSuitFromCard card
-                    }
+                if (Cards.getFaceFromCard card) == 8 then
+                    update DealersTurn
+                        (askUserForSuit
+                            { model
+                                | discardPile = card :: model.discardPile
+                                , playerHand = newPlayerHand
+                            }
+                        )
+                else
+                    update DealersTurn
+                        { model
+                            | discardPile = card :: model.discardPile
+                            , playerHand = newPlayerHand
+                            , currentSuit = Cards.getSuitFromCard card
+                        }
 
         DealersTurn ->
             if List.length model.playerHand == 0 then
@@ -98,6 +107,13 @@ update msg model =
                 )
             else
                 model ! []
+
+
+askUserForSuit : Model -> Model
+askUserForSuit model =
+    { model
+        | currentSuit = 'D'
+    }
 
 
 
