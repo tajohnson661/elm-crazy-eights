@@ -10,6 +10,7 @@ module Cards
         , getFaceFromCard
         , removeCard
         , getDeckTopCard
+        , getMostProlificSuit
         )
 
 import Utils
@@ -99,6 +100,11 @@ removeCard card hand =
 getDeckTopCard : List Card -> Maybe Card
 getDeckTopCard deck =
     List.head deck
+
+
+getMostProlificSuit : List Card -> Suit
+getMostProlificSuit cards =
+    'H'
 
 
 initialDeck : List Card

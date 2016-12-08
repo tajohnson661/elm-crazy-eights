@@ -61,12 +61,17 @@ dealerPlaysCard card model =
     let
         newDealerHand =
             Cards.removeCard card model.dealerHand
+
+        newModel =
+            { model
+                | discardPile = card :: model.discardPile
+                , dealerHand = newDealerHand
+            }
     in
-        { model
-            | discardPile = card :: model.discardPile
-            , dealerHand = newDealerHand
-            , currentSuit = Cards.getSuitFromCard card
-        }
+        if Cards.getFaceFromCard card == 8 then
+            { newModel | currentSuit = Cards.getMostProlificSuit newModel.dealerHand }
+        else
+            { newModel | currentSuit = Cards.getSuitFromCard card }
 
 
 drawCard : Model -> Model
