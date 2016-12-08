@@ -56,6 +56,7 @@ update msg model =
                     , playerHand = playerHand
                     , dealerHand = dealerHand
                     , discardPile = discardPile
+                    , currentSuit = getCurrentSuitFromDiscard discardPile
                     , whoseTurn = Player
                   }
                 , Cmd.none
@@ -73,6 +74,7 @@ update msg model =
                     { model
                         | discardPile = card :: model.discardPile
                         , playerHand = newPlayerHand
+                        , currentSuit = Cards.getSuitFromCard card
                     }
 
         DealersTurn ->

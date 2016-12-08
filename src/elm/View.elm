@@ -33,13 +33,14 @@ view model =
                             , span [] [ text "New game" ]
                             ]
                         , viewDiscardPile model.discardPile
+                        , viewCurrentSuit model.currentSuit
                         ]
                     ]
                 ]
             , viewDrawCardButton model
             , h3 [] [ text "Player Hand " ]
             , div [ class "row" ]
-                [ viewHand model.playerHand compareCard model.whoseTurn ]
+                [ viewHand model.playerHand compareCard model.currentSuit model.whoseTurn ]
             ]
 
 
@@ -57,26 +58,26 @@ viewDrawCardButton model =
             div [] []
 
 
-viewHand : List Card -> Maybe Card -> WhoseTurn -> Html Msg
-viewHand hand compareCard whoseTurn =
+viewHand : List Card -> Maybe Card -> Suit -> WhoseTurn -> Html Msg
+viewHand hand compareCard currentSuit whoseTurn =
     ul [ class "list-group" ]
-        (List.map (viewCard compareCard whoseTurn) hand)
+        (List.map (viewCard compareCard currentSuit whoseTurn) hand)
 
 
-viewCard : Maybe Card -> WhoseTurn -> Card -> Html Msg
-viewCard compareCard whoseTurn card =
+viewCard : Maybe Card -> Suit -> WhoseTurn -> Card -> Html Msg
+viewCard compareCard currentSuit whoseTurn card =
     li [ class "list-group-item" ]
         [ text (toFaceName (getFaceFromCard card))
         , img [ src (imageFromSuit (getSuitFromCard card)), style styles.img ] []
-        , viewPlayButton card compareCard whoseTurn
+        , viewPlayButton card compareCard currentSuit whoseTurn
         ]
 
 
-viewPlayButton : Card -> Maybe Card -> WhoseTurn -> Html Msg
-viewPlayButton card compareCard whoseTurn =
+viewPlayButton : Card -> Maybe Card -> Suit -> WhoseTurn -> Html Msg
+viewPlayButton card compareCard currentSuit whoseTurn =
     case whoseTurn of
         Player ->
-            case isCardPlayable compareCard card of
+            case isCardPlayable compareCard currentSuit card of
                 True ->
                     button [ class "btn btn-primary", onClick (PlayCard card) ] [ text "Play this card" ]
 
@@ -117,6 +118,12 @@ viewDiscardPile discardPile =
                 [ text (toFaceName (getFaceFromCard card))
                 , img [ src (imageFromSuit (getSuitFromCard card)), style styles.img ] []
                 ]
+
+
+viewCurrentSuit : Suit -> Html Msg
+viewCurrentSuit suit =
+    div [ class "discard-pile" ]
+        [ img [ src (imageFromSuit suit), style styles.img ] [] ]
 
 
 toFaceName : Int -> String

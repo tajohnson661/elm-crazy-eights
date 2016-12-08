@@ -1,6 +1,6 @@
 module Model exposing (Model, init, WhoseTurn(..))
 
-import Cards exposing (Card)
+import Cards exposing (Card, Suit)
 import Messages exposing (..)
 
 
@@ -18,6 +18,7 @@ type alias Model =
     , playerHand : List Card
     , dealerHand : List Card
     , discardPile : List Card
+    , currentSuit : Suit
     , whoseTurn : WhoseTurn
     , message : String
     }
@@ -29,6 +30,7 @@ init =
       , playerHand = []
       , dealerHand = []
       , discardPile = []
+      , currentSuit = 'H'
       , whoseTurn = None
       , message = ""
       }

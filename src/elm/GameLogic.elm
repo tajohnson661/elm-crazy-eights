@@ -4,8 +4,8 @@ import Cards exposing (Card, Face, Suit)
 import Model exposing (Model, WhoseTurn(..))
 
 
-isCardPlayable : Maybe Card -> Card -> Bool
-isCardPlayable maybeTopOfDiscard card =
+isCardPlayable : Maybe Card -> Suit -> Card -> Bool
+isCardPlayable maybeTopOfDiscard currentSuit card =
     case maybeTopOfDiscard of
         Nothing ->
             False
@@ -15,7 +15,7 @@ isCardPlayable maybeTopOfDiscard card =
                 True
             else if Cards.getFaceFromCard card == Cards.getFaceFromCard topOfDiscard then
                 True
-            else if Cards.getSuitFromCard card == Cards.getSuitFromCard topOfDiscard then
+            else if Cards.getSuitFromCard card == currentSuit then
                 True
             else
                 False
@@ -25,7 +25,7 @@ dealerPlays : Model -> Model
 dealerPlays model =
     let
         playableList =
-            List.filter (isCardPlayable (List.head model.discardPile)) model.dealerHand
+            List.filter (isCardPlayable (List.head model.discardPile) model.currentSuit) model.dealerHand
 
         cardToPlay =
             List.head playableList
@@ -59,15 +59,13 @@ dealerDraws model =
 dealerPlaysCard : Card -> Model -> Model
 dealerPlaysCard card model =
     let
-        _ =
-            Debug.log "dealerPlaysCard" card
-
         newDealerHand =
             Cards.removeCard card model.dealerHand
     in
         { model
             | discardPile = card :: model.discardPile
             , dealerHand = newDealerHand
+            , currentSuit = Cards.getSuitFromCard card
         }
 
 
@@ -132,3 +130,17 @@ reshuffle model =
                                 Cards.shuffleDeck aNewDeck 1481219015621
                             , discardPile = [ card ]
                         }
+
+
+getCurrentSuitFromDiscard : List Card -> Suit
+getCurrentSuitFromDiscard cards =
+    let
+        topOfCards =
+            List.head cards
+    in
+        case topOfCards of
+            Nothing ->
+                'H'
+
+            Just card ->
+                Cards.getSuitFromCard card
