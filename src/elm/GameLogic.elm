@@ -2,6 +2,8 @@ module GameLogic exposing (..)
 
 import Cards exposing (Card, Face, Suit)
 import Model exposing (Model, WhoseTurn(..))
+import Utils exposing (postMessage)
+import Messages exposing (..)
 
 
 isCardPlayable : Maybe Card -> Suit -> Card -> Bool
@@ -96,6 +98,30 @@ dealerPlaysCard card model =
             { newModel | currentSuit = Cards.getSuitFromCard card }
 
 
+playerPlaysCard : Card -> Model -> ( Model, Cmd Msg )
+playerPlaysCard card model =
+    let
+        newPlayerHand =
+            Cards.removeCard card model.playerHand
+    in
+        if (Cards.getFaceFromCard card) == 8 then
+            ( askUserForSuit
+                { model
+                    | discardPile = card :: model.discardPile
+                    , playerHand = newPlayerHand
+                }
+            , Cmd.none
+            )
+        else
+            ( { model
+                | discardPile = card :: model.discardPile
+                , playerHand = newPlayerHand
+                , currentSuit = Cards.getSuitFromCard card
+              }
+            , Utils.postMessage DealersTurn
+            )
+
+
 drawCard : Model -> Model
 drawCard model =
     let
@@ -171,3 +197,10 @@ getCurrentSuitFromDiscard cards =
 
             Just card ->
                 Cards.getSuitFromCard card
+
+
+askUserForSuit : Model -> Model
+askUserForSuit model =
+    { model
+        | showDialog = True
+    }

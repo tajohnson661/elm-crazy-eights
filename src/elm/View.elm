@@ -96,7 +96,7 @@ viewDrawCardButton model =
                     [ button [ class "btn btn-primary btn-lg", onClick DrawCard ] [ text "Draw Card " ] ]
 
         _ ->
-            div [] []
+            empty
 
 
 viewHand : List Card -> Maybe Card -> Suit -> WhoseTurn -> Html Msg
@@ -123,10 +123,10 @@ viewPlayButton card compareCard currentSuit whoseTurn =
                     button [ class "btn btn-primary", onClick (PlayCard card) ] [ text "Play this card" ]
 
                 False ->
-                    div [] []
+                    empty
 
         _ ->
-            div [] []
+            empty
 
 
 imageFromSuit : Suit -> String
@@ -152,7 +152,7 @@ viewDiscardPile : List Card -> Html Msg
 viewDiscardPile discardPile =
     case (List.head discardPile) of
         Nothing ->
-            div [] []
+            empty
 
         Just card ->
             div [ class "discard-pile" ]
@@ -202,3 +202,8 @@ styles =
         , ( "margin", "4px" )
         ]
     }
+
+
+empty : Html Msg
+empty =
+    span [] []

@@ -2,6 +2,7 @@ module Update exposing (update)
 
 import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
+import Utils exposing (postMessage)
 import Cards exposing (Card, removeCard, getDeckTopCard)
 import GameLogic exposing (..)
 import Ports
@@ -58,7 +59,7 @@ update msg model =
                 , Cmd.none
                 )
             else
-                update DealersTurnDone (dealerPlays model)
+                ( dealerPlays model, postMessage DealersTurnDone )
 
         DealersTurnDone ->
             if List.length model.dealerHand == 0 then
@@ -72,38 +73,9 @@ update msg model =
                 model ! []
 
         Acknowledge suit ->
-            update DealersTurn
-                { model
-                    | showDialog = False
-                    , currentSuit = suit
-                }
-
-
-playerPlaysCard : Card -> Model -> ( Model, Cmd Msg )
-playerPlaysCard card model =
-    let
-        newPlayerHand =
-            Cards.removeCard card model.playerHand
-    in
-        if (Cards.getFaceFromCard card) == 8 then
-            ( askUserForSuit
-                { model
-                    | discardPile = card :: model.discardPile
-                    , playerHand = newPlayerHand
-                }
-            , Cmd.none
+            ( { model
+                | showDialog = False
+                , currentSuit = suit
+              }
+            , postMessage DealersTurn
             )
-        else
-            update DealersTurn
-                { model
-                    | discardPile = card :: model.discardPile
-                    , playerHand = newPlayerHand
-                    , currentSuit = Cards.getSuitFromCard card
-                }
-
-
-askUserForSuit : Model -> Model
-askUserForSuit model =
-    { model
-        | showDialog = True
-    }

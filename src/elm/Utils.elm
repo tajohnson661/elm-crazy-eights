@@ -1,4 +1,7 @@
-module Utils exposing (listsToTupleList, listsToTupleListMap)
+module Utils exposing (listsToTupleList, listsToTupleListMap, postMessage)
+
+import Task
+
 
 -- Combine two lists into a list of tuples... cartesian product I think
 
@@ -42,3 +45,8 @@ familyMap l1 item =
 getTuple : a -> b -> ( b, a )
 getTuple item1 item2 =
     ( item2, item1 )
+
+
+postMessage : msg -> Cmd msg
+postMessage x =
+    Task.perform identity (Task.succeed x)
