@@ -24,11 +24,11 @@ isCardPlayable maybeTopOfDiscard currentSuit card =
 dealerPlays : Model -> Model
 dealerPlays model =
     let
-        playableList =
-            List.filter (isCardPlayable (List.head model.discardPile) model.currentSuit) model.dealerHand
-
         cardToPlay =
-            List.head playableList
+            model.dealerHand
+                |> List.filter (isCardPlayable (List.head model.discardPile) model.currentSuit)
+                |> List.sortWith eightsCompare
+                |> List.head
     in
         case cardToPlay of
             Nothing ->
@@ -36,6 +36,28 @@ dealerPlays model =
 
             Just card ->
                 dealerPlaysCard card model
+
+
+
+{--
+    Move eights to the end of the list... play them last
+--}
+
+
+eightsCompare : Card -> Card -> Order
+eightsCompare a b =
+    case ( Tuple.first a, Tuple.first b ) of
+        ( 8, 8 ) ->
+            EQ
+
+        ( 8, _ ) ->
+            GT
+
+        ( _, 8 ) ->
+            LT
+
+        _ ->
+            EQ
 
 
 dealerDraws : Model -> Model
