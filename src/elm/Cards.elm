@@ -109,17 +109,24 @@ getMostProlificSuit cards =
         theDict =
             Dict.fromList [ ( 'H', 0 ), ( 'D', 0 ), ( 'S', 0 ), ( 'C', 0 ) ]
 
-        countDict =
-            List.foldl countthem theDict cards
-
-        _ =
-            Debug.log "count list" countDict
+        maybeTuple =
+            cards
+                |> List.foldl countThem theDict
+                |> Dict.toList
+                |> List.sortBy Tuple.second
+                |> List.reverse
+                |> List.head
     in
-        'H'
+        case maybeTuple of
+            Nothing ->
+                'H'
+
+            Just tuple ->
+                Tuple.first tuple
 
 
-countthem : Card -> Dict Char Int -> Dict Char Int
-countthem card currentValues =
+countThem : Card -> Dict Char Int -> Dict Char Int
+countThem card currentValues =
     case getSuitFromCard card of
         'H' ->
             addTo 'H' currentValues
