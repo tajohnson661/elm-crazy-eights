@@ -4,8 +4,9 @@ import Test exposing (..)
 import Expect
 import Fuzz exposing (list, int, tuple, string)
 import String
-import Cards exposing (isCardPlayable, Card, Face, Suit)
+import Cards exposing (Card, Face, Suit)
 import Utils exposing (listsToTupleList, listsToTupleListMap)
+import GameLogic exposing (isCardPlayable)
 
 
 faces : List Face
@@ -44,12 +45,12 @@ all =
         [ describe "Card module tests"
             [ test "isCardPlayable" <|
                 \() ->
-                    isCardPlayable card1 (List.head discardPile)
+                    isCardPlayable (List.head discardPile) 'H' card1
                         |> Expect.equal
                             True
             , test "isCardPlayable" <|
                 \() ->
-                    Expect.equal (isCardPlayable card2 (List.head discardPile)) False
+                    Expect.equal (isCardPlayable (List.head discardPile) 'H' card2) False
             ]
         , describe "Util tests"
             [ test "listsToTupleList" <|

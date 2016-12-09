@@ -1,35 +1,19 @@
-# elm-webpack-starter
+# Crazy Eights
 
-A simple Webpack setup for writing [Elm](http://elm-lang.org/) apps:
-
-* Dev server with live reloading, HMR
-* Support for CSS/SCSS (with Autoprefixer), image assets
-* Bootstrap 3.3+ (Sass version)
-* Bundling and minification for deployment
-* Basic app scaffold, using `Html.beginnerProgram`
-* A snippet of example code to get you started!
+Play crazy eights against the computer
 
 
-### Install:
+### Setup:
+Make sure you have elm installed.
 Clone this repo into a new project folder, e.g. `my-elm-project`:
+
 ```
-git clone https://github.com/moarwick/elm-webpack-starter my-elm-project
+git clone https://github.com/tajohnson661/elm-crazy-eights my-elm-project
 cd my-elm-project
+npm install
+elm package install
 ```
 
-Re-initialize the project folder as your own repo:
-```
-rm -rf .git
-git init
-git add .
-git commit -m 'first commit'
-```
-
-Install all dependencies using the handy `reinstall` script:
-```
-npm run reinstall
-```
-*This does a clean (re)install of all npm and elm packages, plus a global elm install.*
 
 
 ### Serve locally:
@@ -37,10 +21,14 @@ npm run reinstall
 npm start
 ```
 * Access app at `http://localhost:8080/`
-* Get coding! The entry point file is `src/elm/Main.elm`
+* The entry point file is `src/elm/Main.elm`
 * Browser will refresh automatically on any file changes..
 
 
+### Tests:
+```
+elm-test
+```
 ### Build & bundle for prod:
 ```
 npm run build
@@ -49,39 +37,13 @@ npm run build
 * Files are saved into the `/dist` folder
 * To check it, open `dist/index.html`
 
+### Elm Development Notes:
 
-### Changelog
+* There's one place where I call update recursively because I want to send a message through the Update function. I'd prefer to just use a Task or something to have TEA call update with my message, but I'm not sure how to do that.  Calling update directly also screws with my modules since I get recursive imports if I set it up 'cleanly'.
 
-**Ver 0.8.0**
-* Update to Elm 0.18, use `debug=true` on webpack loader (PR by [douglascorrea](https://github.com/moarwick/elm-webpack-starter/pull/33))
-* Add a script for one-step installs
-* Update to latest packages
+### Game Development Notes:
 
-**Ver 0.7.1**
-* Fix favicon issues, per [Issue 30](https://github.com/moarwick/elm-webpack-starter/issues/30)
+* Dealer only plays an eight if nothing else to play
+* If the deck to draw cards from is empty, I refill/shuffle the cards right away instead of when the user needs to draw.  This will help with the UI in showing the current state
+* One known situation I don't handle: If the player and dealer hold all the cards in their hands (nothing in the draw pile and nothing in the discard pile), and then the player plays a card, I don't reset the draw pile.  Super edge case, so who cares.
 
-**Ver 0.7.0**
-* Modify project structure, per [Issue 26](https://github.com/moarwick/elm-webpack-starter/issues/26)
-* Include Bootstrap JS, per [Issue 28](https://github.com/moarwick/elm-webpack-starter/issues/28)
-* More helpful install steps in README, per [Issue 29](https://github.com/moarwick/elm-webpack-starter/issues/29)
-* Update to latest packages
-
-**Ver 0.6.2**
-* Use `copy-webpack-plugin` instead of `cp` to copy files (Windows compatible)
-
-**Ver 0.6.0**
-* `elm-hot-loader` is back (no Elm code changes required!)
-* Switch to [bootstrap-sass](https://www.npmjs.com/package/bootstrap-sass) to demo CSS
-
-**Ver 0.5.0**
-* Update to Elm 0.17.0 (and other latest modules)
-* Upgrade starter code per [upgrade-docs](https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md)
-* Remove `elm-hot-loader` (for now)
-
-**Ver 0.4.0**
-* Add [elm-hot-loader](https://github.com/fluxxu/elm-hot-loader) for HMR support (PR by [fluxxu](https://github.com/fluxxu))
-
-**Ver 0.3.0**
-* Use `html-webpack-plugin` to generate `index.html`
-* Apply hash filenames for bundled JS and CSS (prevents caching)
-* Image and favicon assets copied to `dist/`

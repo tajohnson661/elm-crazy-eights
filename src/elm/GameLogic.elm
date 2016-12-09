@@ -73,7 +73,7 @@ dealerDraws model =
             Just card ->
                 let
                     newModel =
-                        reshuffleIfNecessary model
+                        reshuffleIfDeckEmpty model
                 in
                     { newModel | dealerHand = card :: newModel.dealerHand }
 
@@ -109,13 +109,13 @@ drawCard model =
             Just card ->
                 let
                     newModel =
-                        reshuffleIfNecessary model
+                        reshuffleIfDeckEmpty model
                 in
                     { newModel | playerHand = card :: newModel.playerHand }
 
 
-reshuffleIfNecessary : Model -> Model
-reshuffleIfNecessary model =
+reshuffleIfDeckEmpty : Model -> Model
+reshuffleIfDeckEmpty model =
     case List.tail model.shuffledDeck of
         Nothing ->
             model
