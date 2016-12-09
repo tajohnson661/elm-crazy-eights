@@ -40,28 +40,6 @@ dealerPlays model =
                 dealerPlaysCard card model
 
 
-
-{--
-    Move eights to the end of the list... play them last
---}
-
-
-eightsCompare : Card -> Card -> Order
-eightsCompare a b =
-    case ( Tuple.first a, Tuple.first b ) of
-        ( 8, 8 ) ->
-            EQ
-
-        ( 8, _ ) ->
-            GT
-
-        ( _, 8 ) ->
-            LT
-
-        _ ->
-            EQ
-
-
 dealerDraws : Model -> Model
 dealerDraws model =
     let
@@ -78,6 +56,24 @@ dealerDraws model =
                         reshuffleIfDeckEmpty model
                 in
                     { newModel | dealerHand = card :: newModel.dealerHand }
+
+
+playerDraws : Model -> Model
+playerDraws model =
+    let
+        drawnCard =
+            Cards.getDeckTopCard model.shuffledDeck
+    in
+        case drawnCard of
+            Nothing ->
+                model
+
+            Just card ->
+                let
+                    newModel =
+                        reshuffleIfDeckEmpty model
+                in
+                    { newModel | playerHand = card :: newModel.playerHand }
 
 
 dealerPlaysCard : Card -> Model -> Model
@@ -103,41 +99,24 @@ playerPlaysCard card model =
     let
         newPlayerHand =
             Cards.removeCard card model.playerHand
+
+        newModel =
+            { model
+                | discardPile = card :: model.discardPile
+                , playerHand = newPlayerHand
+            }
     in
         if (Cards.getFaceFromCard card) == 8 then
             ( askUserForSuit
-                { model
-                    | discardPile = card :: model.discardPile
-                    , playerHand = newPlayerHand
-                }
+                newModel
             , Cmd.none
             )
         else
-            ( { model
-                | discardPile = card :: model.discardPile
-                , playerHand = newPlayerHand
-                , currentSuit = Cards.getSuitFromCard card
+            ( { newModel
+                | currentSuit = Cards.getSuitFromCard card
               }
             , Utils.postMessage DealersTurn
             )
-
-
-drawCard : Model -> Model
-drawCard model =
-    let
-        drawnCard =
-            Cards.getDeckTopCard model.shuffledDeck
-    in
-        case drawnCard of
-            Nothing ->
-                model
-
-            Just card ->
-                let
-                    newModel =
-                        reshuffleIfDeckEmpty model
-                in
-                    { newModel | playerHand = card :: newModel.playerHand }
 
 
 reshuffleIfDeckEmpty : Model -> Model
@@ -204,3 +183,25 @@ askUserForSuit model =
     { model
         | showDialog = True
     }
+
+
+
+{--
+    Move eights to the end of the list... play them last
+--}
+
+
+eightsCompare : Card -> Card -> Order
+eightsCompare a b =
+    case ( Tuple.first a, Tuple.first b ) of
+        ( 8, 8 ) ->
+            EQ
+
+        ( 8, _ ) ->
+            GT
+
+        ( _, 8 ) ->
+            LT
+
+        _ ->
+            EQ

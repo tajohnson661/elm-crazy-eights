@@ -45,7 +45,7 @@ update msg model =
                 )
 
         DrawCard ->
-            ( drawCard model, Cmd.none )
+            ( playerDraws model, Cmd.none )
 
         PlayCard card ->
             playerPlaysCard card model
