@@ -15,6 +15,7 @@ module Cards
 
 import Utils
 import Random
+import Dict exposing (Dict)
 
 
 type alias Face =
@@ -104,7 +105,50 @@ getDeckTopCard deck =
 
 getMostProlificSuit : List Card -> Suit
 getMostProlificSuit cards =
-    'H'
+    let
+        theDict =
+            Dict.fromList [ ( 'H', 0 ), ( 'D', 0 ), ( 'S', 0 ), ( 'C', 0 ) ]
+
+        countDict =
+            List.foldl countthem theDict cards
+
+        _ =
+            Debug.log "count list" countDict
+    in
+        'H'
+
+
+countthem : Card -> Dict Char Int -> Dict Char Int
+countthem card currentValues =
+    case getSuitFromCard card of
+        'H' ->
+            addTo 'H' currentValues
+
+        'D' ->
+            addTo 'D' currentValues
+
+        'S' ->
+            addTo 'S' currentValues
+
+        'C' ->
+            addTo 'C' currentValues
+
+        _ ->
+            currentValues
+
+
+addTo : Suit -> Dict Char Int -> Dict Char Int
+addTo suit dict =
+    let
+        maybeCurCount =
+            Dict.get suit dict
+    in
+        case maybeCurCount of
+            Just curCount ->
+                Dict.insert suit (curCount + 1) dict
+
+            Nothing ->
+                dict
 
 
 initialDeck : List Card
