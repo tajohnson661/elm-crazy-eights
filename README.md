@@ -4,7 +4,8 @@ Play crazy eights against the computer
 
 
 ### Setup:
-Make sure you have elm installed.
+Make sure you have elm installed. [Elm home](http:/elm-lang.org)
+
 Clone this repo into a new project folder, e.g. `my-elm-project`:
 
 ```
@@ -38,6 +39,8 @@ npm run build
 * To check it, open `dist/index.html`
 
 ### Elm Development Notes:
+
+* I used [elm-webpack-starter](https://github.com/moarwick/elm-webpack-starter) as a starter app
 
 
 ### Game Development Notes:
