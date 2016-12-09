@@ -3,7 +3,7 @@ module View exposing (view)
 import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h3, h4, h5, ul, li, nav, a, i, footer)
-import Html.Attributes exposing (class, style, src, href, id)
+import Html.Attributes exposing (class, style, src, href, id, attribute)
 import Html.Events exposing (onClick)
 import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard)
 import GameLogic exposing (..)
@@ -26,18 +26,18 @@ view model =
 
 viewHeader : Model -> Html Msg
 viewHeader model =
-    nav [ class "light-blue lighten-1" ]
+    nav [ class "light-blue lighten-1", attribute "role" "navigation" ]
         [ div [ class "nav-wrapper container" ]
             [ a [ id "logo-container", href "#", class "brand-logo" ] [ text "Crazy Eights" ]
             , ul [ class "right hide-on-med-and-down" ]
                 [ li []
                     [ a [ onClick StartShuffle ] [ text "New game" ] ]
                 ]
-            , ul [ id "nav-mobile", class "side-nav" ]
+            , ul [ id "nav-mobile", class "side-nav", style [ ( "transform", "translateX(-100%)" ) ] ]
                 [ li []
                     [ a [ onClick StartShuffle ] [ text "New game" ] ]
                 ]
-            , a [ href "#", class "button-collapse" ]
+            , a [ href "#", attribute "data-activates" "nav-mobile", class "button-collapse" ]
                 [ i [ class "material-icons" ] [ text "menu" ] ]
             ]
         ]
