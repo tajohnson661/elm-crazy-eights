@@ -39,8 +39,6 @@ npm run build
 
 ### Elm Development Notes:
 
-* There's one place where I call update recursively because I want to send a message through the Update function. I'd prefer to just use a Task or something to have TEA call update with my message, but I'm not sure how to do that.  Calling update directly also screws with my modules since I get recursive imports if I set it up 'cleanly'.
-* In the UI, sometimes I return an empty div, but would prefer to return Nothing.  Not really sure of a good design pattern for this.
 
 ### Game Development Notes:
 
