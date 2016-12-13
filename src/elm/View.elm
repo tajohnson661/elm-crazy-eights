@@ -73,7 +73,7 @@ viewBody model =
     in
         case model.whoseTurn of
             Player ->
-                div [ class "container playingCards" ]
+                div [ class "container playingCards simpleCards" ]
                     [ viewDealerHand model.dealerHand
                     , viewMiddleSection model
                     , Dialog.view
@@ -130,10 +130,9 @@ dialogConfig model =
 viewDrawCardButton : Model -> Html Msg
 viewDrawCardButton model =
     if List.length model.shuffledDeck == 0 then
-        div [] []
+        empty
     else
-        div [ class "right" ]
-            [ button [ class "btn btn-primary btn-lg", onClick DrawCard ] [ text "Draw Card " ] ]
+        div [ class "pCard back right", onClick DrawCard ] [ text "*" ]
 
 
 viewMiddleSection : Model -> Html Msg
@@ -162,24 +161,6 @@ viewDealerHand hand =
             [ h2 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
         , div [ class "row center" ]
             (List.map paintBack hand)
-        , div [ class "row center" ]
-            [ div [ class "pCard rank-7 spades" ]
-                [ span [ class "rank" ] [ text "7" ]
-                , span [ class "suit" ] [ text "♠" ]
-                ]
-            , div [ class "pCard rank-7 clubs" ]
-                [ span [ class "rank" ] [ text "7" ]
-                , span [ class "suit" ] [ text "♣" ]
-                ]
-            , div [ class "pCard rank-7 diams" ]
-                [ span [ class "rank" ] [ text "7" ]
-                , span [ class "suit" ] [ text "♦" ]
-                ]
-            , div [ class "pCard rank-7 hearts" ]
-                [ span [ class "rank" ] [ text "7" ]
-                , span [ class "suit" ] [ text "♥" ]
-                ]
-            ]
         ]
 
 
@@ -200,7 +181,7 @@ viewPlayerHand model compareCard =
 
 viewCard : Maybe Card -> Suit -> WhoseTurn -> Card -> Html Msg
 viewCard compareCard currentSuit whoseTurn card =
-    div []
+    div [ class "player-card" ]
         [ paintCard card
         , viewPlayButton card compareCard currentSuit whoseTurn
         ]
@@ -268,7 +249,7 @@ viewPlayButton card compareCard currentSuit whoseTurn =
         Player ->
             case isCardPlayable compareCard currentSuit card of
                 True ->
-                    button [ class "btn btn-primary", onClick (PlayCard card) ] [ text "Play this card" ]
+                    button [ onClick (PlayCard card) ] [ text "Play" ]
 
                 False ->
                     empty
@@ -308,7 +289,18 @@ viewDiscardPile discardPile =
 
 viewCurrentSuit : Suit -> Html Msg
 viewCurrentSuit suit =
-    paintCard ( 0, suit )
+    -- paintCard ( 0, suit )
+    let
+        ( suitClass, suitText ) =
+            getSuitPaintInfoFromSuit suit
+
+        classText =
+            "pCard " ++ suitClass
+    in
+        div [ class classText ]
+            [ span [ class "rank" ] [ text "" ]
+            , span [ class "suit" ] [ text suitText ]
+            ]
 
 
 toFaceName : Int -> String
