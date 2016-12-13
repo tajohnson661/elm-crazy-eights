@@ -5,7 +5,7 @@ import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, ul, li, nav, a, i, footer)
 import Html.Attributes exposing (class, style, src, href, id, attribute)
 import Html.Events exposing (onClick)
-import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard)
+import Cards exposing (Card, Suit, Face, getSuitFromCard, getFaceFromCard)
 import GameLogic exposing (..)
 import Dialog
 
@@ -161,7 +161,7 @@ viewDealerHand hand =
         [ div [ class "row center" ]
             [ h2 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
         , div [ class "row center" ]
-            (List.map drawBack hand)
+            (List.map paintBack hand)
         , div [ class "row center" ]
             [ div [ class "pCard rank-7 spades" ]
                 [ span [ class "rank" ] [ text "7" ]
@@ -183,8 +183,8 @@ viewDealerHand hand =
         ]
 
 
-drawBack : Card -> Html Msg
-drawBack card =
+paintBack : Card -> Html Msg
+paintBack card =
     div [ class "pCard back" ] [ text "*" ]
 
 
@@ -194,23 +194,72 @@ viewPlayerHand model compareCard =
         [ div [ class "row center" ]
             [ h2 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
         , div [ class "row center" ]
-            [ viewHand model.playerHand compareCard model.currentSuit model.whoseTurn ]
+            (List.map (viewCard compareCard model.currentSuit model.whoseTurn) model.playerHand)
         ]
-
-
-viewHand : List Card -> Maybe Card -> Suit -> WhoseTurn -> Html Msg
-viewHand hand compareCard currentSuit whoseTurn =
-    ul [ class "list-group" ]
-        (List.map (viewCard compareCard currentSuit whoseTurn) hand)
 
 
 viewCard : Maybe Card -> Suit -> WhoseTurn -> Card -> Html Msg
 viewCard compareCard currentSuit whoseTurn card =
-    li [ class "list-group-item" ]
-        [ text (toFaceName (getFaceFromCard card))
-        , img [ src (imageFromSuit (getSuitFromCard card)), style styles.img ] []
+    div []
+        [ paintCard card
         , viewPlayButton card compareCard currentSuit whoseTurn
         ]
+
+
+paintCard : Card -> Html Msg
+paintCard card =
+    let
+        ( suitClass, suitText ) =
+            getSuitPaintInfoFromSuit (getSuitFromCard card)
+
+        ( faceClass, faceText ) =
+            getFacePaintInfoFromFace (getFaceFromCard card)
+
+        classText =
+            "pCard " ++ faceClass ++ " " ++ suitClass
+    in
+        div [ class classText ]
+            [ span [ class "rank" ] [ text faceText ]
+            , span [ class "suit" ] [ text suitText ]
+            ]
+
+
+getSuitPaintInfoFromSuit : Suit -> ( String, String )
+getSuitPaintInfoFromSuit suit =
+    case suit of
+        'H' ->
+            ( "hearts", "♥" )
+
+        'D' ->
+            ( "diams", "♦" )
+
+        'C' ->
+            ( "clubs", "♣" )
+
+        'S' ->
+            ( "spades", "♠" )
+
+        _ ->
+            ( "spades", "♠" )
+
+
+getFacePaintInfoFromFace : Face -> ( String, String )
+getFacePaintInfoFromFace faceValue =
+    case faceValue of
+        1 ->
+            ( "rank-a", "A" )
+
+        11 ->
+            ( "rank-j", "J" )
+
+        12 ->
+            ( "rank-q", "Q" )
+
+        13 ->
+            ( "rank-k", "K" )
+
+        _ ->
+            ( "rank-" ++ toString faceValue, toString faceValue )
 
 
 viewPlayButton : Card -> Maybe Card -> Suit -> WhoseTurn -> Html Msg
