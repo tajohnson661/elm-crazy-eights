@@ -20,7 +20,7 @@ update msg model =
                 , playerHand = []
                 , dealerHand = []
                 , whoseTurn = None
-                , message = ""
+                , message = " "
               }
             , Ports.getTime ()
             )
@@ -57,7 +57,7 @@ update msg model =
                         playerPlaysCard card model
 
                     False ->
-                        ( { model | message = "can't play that" }, Cmd.none )
+                        ( { model | message = "You can't play that card" }, Cmd.none )
 
         DealersTurn ->
             if List.length model.playerHand == 0 then

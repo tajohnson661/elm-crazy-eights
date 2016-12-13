@@ -33,7 +33,7 @@ init =
       , discardPile = []
       , currentSuit = 'H'
       , whoseTurn = None
-      , message = ""
+      , message = " "
       , showDialog = False
       }
     , Cmd.none

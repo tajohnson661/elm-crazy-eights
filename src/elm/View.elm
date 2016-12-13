@@ -140,7 +140,7 @@ viewMiddleSection model =
     div []
         [ div [ class "row center" ]
             [ div [ class "col s12" ]
-                [ h4 [] [ text model.message ]
+                [ h5 [] [ text model.message ]
                 ]
             ]
         , div [ class "row" ]
@@ -158,7 +158,7 @@ viewDealerHand : List Card -> Html Msg
 viewDealerHand hand =
     div []
         [ div [ class "row center" ]
-            [ h2 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
+            [ h3 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
         , div [ class "row center" ]
             (List.map paintBack hand)
         ]
@@ -173,7 +173,7 @@ viewPlayerHand : Model -> Maybe Card -> Html Msg
 viewPlayerHand model compareCard =
     div []
         [ div [ class "row center" ]
-            [ h2 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
+            [ h3 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
         , div [ class "row center" ]
             (List.map (viewCard compareCard model.currentSuit model.whoseTurn) model.playerHand)
         ]
@@ -182,12 +182,12 @@ viewPlayerHand model compareCard =
 viewCard : Maybe Card -> Suit -> WhoseTurn -> Card -> Html Msg
 viewCard compareCard currentSuit whoseTurn card =
     div [ class "player-card" ]
-        [ paintCard card
+        [ paintCard card True
         ]
 
 
-paintCard : Card -> Html Msg
-paintCard card =
+paintCard : Card -> Bool -> Html Msg
+paintCard card allowClick =
     let
         ( suitClass, suitText ) =
             getSuitPaintInfoFromSuit (getSuitFromCard card)
@@ -198,10 +198,16 @@ paintCard card =
         classText =
             "pCard " ++ faceClass ++ " " ++ suitClass
     in
-        div [ class classText, onClick (PlayCard card) ]
-            [ span [ class "rank" ] [ text faceText ]
-            , span [ class "suit" ] [ text suitText ]
-            ]
+        if allowClick then
+            div [ class ("pointer " ++ classText), onClick (PlayCard card) ]
+                [ span [ class "rank" ] [ text faceText ]
+                , span [ class "suit" ] [ text suitText ]
+                ]
+        else
+            div [ class classText ]
+                [ span [ class "rank" ] [ text faceText ]
+                , span [ class "suit" ] [ text suitText ]
+                ]
 
 
 getSuitPaintInfoFromSuit : Suit -> ( String, String )
@@ -268,7 +274,7 @@ viewDiscardPile discardPile =
             empty
 
         Just card ->
-            paintCard card
+            paintCard card False
 
 
 viewCurrentSuit : Suit -> Html Msg
