@@ -73,7 +73,7 @@ viewBody model =
     in
         case model.whoseTurn of
             Player ->
-                div [ class "container" ]
+                div [ class "container playingCards simpleCards" ]
                     [ viewDealerHand model.dealerHand
                     , viewMiddleSection model
                     , Dialog.view
@@ -160,8 +160,24 @@ viewDealerHand hand =
     div []
         [ div [ class "row center" ]
             [ h2 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
-        , div [ class "row center" ]
-            [ text "dealer hand goes here" ]
+        , div [ class "row center playingCards" ]
+            [ div [ class "playingCards card rank-7 spades" ]
+                [ span [ class "rank" ] [ text "7" ]
+                , span [ class "suit" ] [ text "♠" ]
+                ]
+            , div [ class "card rank-7 clubs" ]
+                [ span [ class "rank" ] [ text "7" ]
+                , span [ class "suit" ] [ text "♣" ]
+                ]
+            , div [ class "card rank-7 diamonds" ]
+                [ span [ class "rank" ] [ text "7" ]
+                , span [ class "suit" ] [ text "♦" ]
+                ]
+            , div [ class "card rank-7 hearts" ]
+                [ span [ class "rank" ] [ text "7" ]
+                , span [ class "suit" ] [ text "♥" ]
+                ]
+            ]
         ]
 
 
