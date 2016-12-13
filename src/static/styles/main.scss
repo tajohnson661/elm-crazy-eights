@@ -2,6 +2,18 @@
 // can add Boostrap/MaterialUI overrides, additional Sass/CSS below...
 
 .discard-pile {
+  img {
+    width : 20px;
+    height : 20px;
+  }
+  font-size : 2.5em;
+  font-weight : bold;
+}
+.current-suit {
+  img {
+    width : 40px;
+    height : 40px
+  }
   font-size : 2.5em;
   font-weight : bold;
 }

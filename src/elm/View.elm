@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Model exposing (Model, WhoseTurn(..))
 import Messages exposing (..)
-import Html exposing (Html, div, text, button, span, p, img, h3, h4, h5, ul, li, nav, a, i, footer)
+import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, ul, li, nav, a, i, footer)
 import Html.Attributes exposing (class, style, src, href, id, attribute)
 import Html.Events exposing (onClick)
 import Cards exposing (Card, Suit, getSuitFromCard, getFaceFromCard)
@@ -33,7 +33,7 @@ viewHeader model =
                 [ li []
                     [ a [ onClick StartShuffle ] [ text "New game" ] ]
                 ]
-            , ul [ id "nav-mobile", class "side-nav", style [ ( "transform", "translateX(-100%)" ) ] ]
+            , ul [ id "nav-mobile", class "side-nav" ]
                 [ li []
                     [ a [ onClick StartShuffle ] [ text "New game" ] ]
                 ]
@@ -71,28 +71,26 @@ viewBody model =
         compareCard =
             List.head model.discardPile
     in
-        div [ class "container", style [ ( "margin-top", "30px" ), ( "text-align", "center" ) ] ]
-            [ viewDealerHand model.dealerHand
-            , div [ class "row" ]
-                [ div [ class "col s12" ]
-                    [ div [ class "jumbotron" ]
+        case model.whoseTurn of
+            Player ->
+                div [ class "container" ]
+                    [ viewDealerHand model.dealerHand
+                    , viewMiddleSection model
+                    , Dialog.view
+                        (if model.showDialog then
+                            Just (dialogConfig model)
+                         else
+                            Nothing
+                        )
+                    , viewPlayerHand model compareCard
+                    ]
+
+            _ ->
+                div [ class "row center" ]
+                    [ div [ class "col s12" ]
                         [ h4 [] [ text model.message ]
-                        , viewDiscardPile model.discardPile
-                        , viewCurrentSuit model.currentSuit
                         ]
                     ]
-                ]
-            , viewDrawCardButton model
-            , Dialog.view
-                (if model.showDialog then
-                    Just (dialogConfig model)
-                 else
-                    Nothing
-                )
-            , h3 [] [ text "Player Hand " ]
-            , div [ class "row" ]
-                [ viewHand model.playerHand compareCard model.currentSuit model.whoseTurn ]
-            ]
 
 
 dialogConfig : Model -> Dialog.Config Msg
@@ -131,21 +129,50 @@ dialogConfig model =
 
 viewDrawCardButton : Model -> Html Msg
 viewDrawCardButton model =
-    case model.whoseTurn of
-        Player ->
-            if List.length model.shuffledDeck == 0 then
-                div [] []
-            else
-                div [ class "row" ]
-                    [ button [ class "btn btn-primary btn-lg", onClick DrawCard ] [ text "Draw Card " ] ]
+    if List.length model.shuffledDeck == 0 then
+        div [] []
+    else
+        div [ class "right" ]
+            [ button [ class "btn btn-primary btn-lg", onClick DrawCard ] [ text "Draw Card " ] ]
 
-        _ ->
-            empty
+
+viewMiddleSection : Model -> Html Msg
+viewMiddleSection model =
+    div []
+        [ div [ class "row center" ]
+            [ div [ class "col s12" ]
+                [ h4 [] [ text model.message ]
+                ]
+            ]
+        , div [ class "row" ]
+            [ div [ class "col s12 m5" ]
+                [ viewDrawCardButton model ]
+            , div [ class "col s12 m2" ]
+                [ viewDiscardPile model.discardPile ]
+            , div [ class "col s12 m5" ]
+                [ viewCurrentSuit model.currentSuit ]
+            ]
+        ]
 
 
 viewDealerHand : List Card -> Html Msg
 viewDealerHand hand =
-    text "x"
+    div []
+        [ div [ class "row center" ]
+            [ h2 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
+        , div [ class "row center" ]
+            [ text "dealer hand goes here" ]
+        ]
+
+
+viewPlayerHand : Model -> Maybe Card -> Html Msg
+viewPlayerHand model compareCard =
+    div []
+        [ div [ class "row center" ]
+            [ h2 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
+        , div [ class "row center" ]
+            [ viewHand model.playerHand compareCard model.currentSuit model.whoseTurn ]
+        ]
 
 
 viewHand : List Card -> Maybe Card -> Suit -> WhoseTurn -> Html Msg
@@ -204,19 +231,16 @@ viewDiscardPile discardPile =
             empty
 
         Just card ->
-            div [ class "discard-pile" ]
+            div [ class "discard-pile center" ]
                 [ text (toFaceName (getFaceFromCard card))
-                , img [ src (imageFromSuit (getSuitFromCard card)), style styles.img ] []
+                , img [ src (imageFromSuit (getSuitFromCard card)) ] []
                 ]
 
 
 viewCurrentSuit : Suit -> Html Msg
 viewCurrentSuit suit =
-    div []
-        [ div [] [ text "current suit" ]
-        , div [ class "discard-pile" ]
-            [ img [ src (imageFromSuit suit), style styles.img ] []
-            ]
+    div [ class "current-suit" ]
+        [ img [ src (imageFromSuit suit) ] []
         ]
 
 
