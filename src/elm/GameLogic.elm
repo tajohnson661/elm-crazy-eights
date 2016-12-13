@@ -86,6 +86,7 @@ dealerPlaysCard card model =
             { model
                 | discardPile = card :: model.discardPile
                 , dealerHand = newDealerHand
+                , message = "Dealer plays card " ++ (toString card)
             }
     in
         if Cards.getFaceFromCard card == 8 then
@@ -104,6 +105,7 @@ playerPlaysCard card model =
             { model
                 | discardPile = card :: model.discardPile
                 , playerHand = newPlayerHand
+                , message = ""
             }
     in
         if (Cards.getFaceFromCard card) == 8 then

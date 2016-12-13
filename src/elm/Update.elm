@@ -48,7 +48,16 @@ update msg model =
             ( playerDraws model, Cmd.none )
 
         PlayCard card ->
-            playerPlaysCard card model
+            let
+                compareCard =
+                    List.head model.discardPile
+            in
+                case isCardPlayable compareCard model.currentSuit card of
+                    True ->
+                        playerPlaysCard card model
+
+                    False ->
+                        ( { model | message = "can't play that" }, Cmd.none )
 
         DealersTurn ->
             if List.length model.playerHand == 0 then

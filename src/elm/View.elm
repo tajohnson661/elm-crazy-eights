@@ -127,8 +127,8 @@ dialogConfig model =
     }
 
 
-viewDrawCardButton : Model -> Html Msg
-viewDrawCardButton model =
+viewDrawCard : Model -> Html Msg
+viewDrawCard model =
     if List.length model.shuffledDeck == 0 then
         empty
     else
@@ -145,7 +145,7 @@ viewMiddleSection model =
             ]
         , div [ class "row" ]
             [ div [ class "col s12 m5" ]
-                [ viewDrawCardButton model ]
+                [ viewDrawCard model ]
             , div [ class "col s12 m2" ]
                 [ viewDiscardPile model.discardPile ]
             , div [ class "col s12 m5" ]
@@ -183,7 +183,6 @@ viewCard : Maybe Card -> Suit -> WhoseTurn -> Card -> Html Msg
 viewCard compareCard currentSuit whoseTurn card =
     div [ class "player-card" ]
         [ paintCard card
-        , viewPlayButton card compareCard currentSuit whoseTurn
         ]
 
 
@@ -199,7 +198,7 @@ paintCard card =
         classText =
             "pCard " ++ faceClass ++ " " ++ suitClass
     in
-        div [ class classText ]
+        div [ class classText, onClick (PlayCard card) ]
             [ span [ class "rank" ] [ text faceText ]
             , span [ class "suit" ] [ text suitText ]
             ]
@@ -241,21 +240,6 @@ getFacePaintInfoFromFace faceValue =
 
         _ ->
             ( "rank-" ++ toString faceValue, toString faceValue )
-
-
-viewPlayButton : Card -> Maybe Card -> Suit -> WhoseTurn -> Html Msg
-viewPlayButton card compareCard currentSuit whoseTurn =
-    case whoseTurn of
-        Player ->
-            case isCardPlayable compareCard currentSuit card of
-                True ->
-                    button [ class "btn-flat", onClick (PlayCard card) ] [ text "Play" ]
-
-                False ->
-                    empty
-
-        _ ->
-            empty
 
 
 imageFromSuit : Suit -> String
