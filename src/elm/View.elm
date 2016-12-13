@@ -249,7 +249,7 @@ viewPlayButton card compareCard currentSuit whoseTurn =
         Player ->
             case isCardPlayable compareCard currentSuit card of
                 True ->
-                    button [ onClick (PlayCard card) ] [ text "Play" ]
+                    button [ class "btn-flat", onClick (PlayCard card) ] [ text "Play" ]
 
                 False ->
                     empty

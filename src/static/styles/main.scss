@@ -413,22 +413,22 @@
 .playingCards.simpleCards .pCard.diams .suit:after,
 .playingCards .pCard.rank-a.diams .suit:after {
     content: "\2666";
-    right: .4em;
+    right: .25em;
 }
 .playingCards.simpleCards .pCard.hearts .suit:after,
 .playingCards .pCard.rank-a.hearts .suit:after {
     content: "\2665";
-    right: .35em;
+    right: .2em;
 }
 .playingCards.simpleCards .pCard.spades .suit:after,
 .playingCards .pCard.rank-a.spades .suit:after {
     content: "\2660";
-    right: .35em;
+    right: .25em;
 }
 .playingCards.simpleCards .pCard.clubs .suit:after,
 .playingCards .pCard.rank-a.clubs .suit:after {
     content: "\2663";
-    right: .3em;
+    right: .2em;
 }
 
 /*____________ smaller cards for use inside text ____________*/
