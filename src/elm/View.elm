@@ -73,7 +73,7 @@ viewBody model =
     in
         case model.whoseTurn of
             Player ->
-                div [ class "container playingCards simpleCards" ]
+                div [ class "container playingCards" ]
                     [ viewDealerHand model.dealerHand
                     , viewMiddleSection model
                     , Dialog.view
@@ -303,17 +303,12 @@ viewDiscardPile discardPile =
             empty
 
         Just card ->
-            div [ class "discard-pile center" ]
-                [ text (toFaceName (getFaceFromCard card))
-                , img [ src (imageFromSuit (getSuitFromCard card)) ] []
-                ]
+            paintCard card
 
 
 viewCurrentSuit : Suit -> Html Msg
 viewCurrentSuit suit =
-    div [ class "current-suit" ]
-        [ img [ src (imageFromSuit suit) ] []
-        ]
+    paintCard ( 0, suit )
 
 
 toFaceName : Int -> String
