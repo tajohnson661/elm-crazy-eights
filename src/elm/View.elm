@@ -160,25 +160,32 @@ viewDealerHand hand =
     div []
         [ div [ class "row center" ]
             [ h2 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
-        , div [ class "row center playingCards" ]
-            [ div [ class "playingCards card rank-7 spades" ]
+        , div [ class "row center" ]
+            (List.map drawBack hand)
+        , div [ class "row center" ]
+            [ div [ class "pCard rank-7 spades" ]
                 [ span [ class "rank" ] [ text "7" ]
                 , span [ class "suit" ] [ text "♠" ]
                 ]
-            , div [ class "card rank-7 clubs" ]
+            , div [ class "pCard rank-7 clubs" ]
                 [ span [ class "rank" ] [ text "7" ]
                 , span [ class "suit" ] [ text "♣" ]
                 ]
-            , div [ class "card rank-7 diamonds" ]
+            , div [ class "pCard rank-7 diams" ]
                 [ span [ class "rank" ] [ text "7" ]
                 , span [ class "suit" ] [ text "♦" ]
                 ]
-            , div [ class "card rank-7 hearts" ]
+            , div [ class "pCard rank-7 hearts" ]
                 [ span [ class "rank" ] [ text "7" ]
                 , span [ class "suit" ] [ text "♥" ]
                 ]
             ]
         ]
+
+
+drawBack : Card -> Html Msg
+drawBack card =
+    div [ class "pCard back" ] [ text "*" ]
 
 
 viewPlayerHand : Model -> Maybe Card -> Html Msg
