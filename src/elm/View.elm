@@ -154,9 +154,11 @@ viewMiddleSection model =
 viewMessage : Model -> Html Msg
 viewMessage model =
     div [ class "row center  message-area" ]
-        [ div [ class "col s12" ]
+        [ div [ class "col s3" ] []
+        , div [ class "col s6 grey lighten-3" ]
             [ h5 [] [ text model.message ]
             ]
+        , div [ class "col s3" ] []
         ]
 
 
@@ -275,7 +277,7 @@ viewCurrentSuit suit =
             "pCard " ++ suitClass
     in
         div [ class classText ]
-            [ span [ class "rank" ] [ text "" ]
+            [ span [ class "rank" ] [ text "\x2006" ]
             , span [ class "suit" ] [ text suitText ]
             ]
 

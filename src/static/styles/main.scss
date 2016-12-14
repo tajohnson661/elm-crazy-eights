@@ -65,7 +65,7 @@
     font-size: 1.2em; /* @change: adjust this value to make bigger or smaller cards */
     font-weight: normal;
     font-family: Arial, sans-serif;
-    position: relative;
+    //position: relative;
     background-color: #fff;
     -moz-box-shadow: .2em .2em .5em #333;
     -webkit-box-shadow: .2em .2em .5em #333;
@@ -168,7 +168,7 @@
 /* different rank letters for different languages */
 .playingCards .pCard .rank:after,
 .playingCards .pCard.joker .rank:before {
-    position: absolute;
+    //position: absolute;
     top: .25em;
     left: .25em;
     background: #fff;
@@ -203,7 +203,8 @@
 /* inner multiple suits */
 .playingCards .pCard .suit:after {
     display: block;
-    margin-top: -.8em;
+    margin-top: -.38em;
+    margin-left: .08em;
     text-align: center;
     white-space: pre;
     line-height: .9;
@@ -387,7 +388,7 @@
 .playingCards .pCard.rank-a .suit:after,
 .playingCards .pCard.joker .rank:after {
     font-family: Georgia, serif;
-    position: absolute;
+    //position: absolute;
     font-size: 3em;
     right: .1em;
     bottom: .25em;
@@ -410,7 +411,7 @@
     content: "";
 }
 .playingCards .pCard.joker .rank:after {
-    position: absolute;
+    //position: absolute;
     content: "\2766";
     top: .4em;
     left: .1em;
