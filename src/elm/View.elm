@@ -123,14 +123,6 @@ dialogConfig model =
     }
 
 
-viewDrawCard : Model -> Html Msg
-viewDrawCard model =
-    if List.length model.shuffledDeck == 0 then
-        empty
-    else
-        div [ class "pCard back right pointer", onClick DrawCard ] [ text "*" ]
-
-
 viewMiddleSection : Model -> Html Msg
 viewMiddleSection model =
     div []
@@ -149,6 +141,14 @@ viewMiddleSection model =
             , div [ class "col s12 m3" ] []
             ]
         ]
+
+
+viewDrawCard : Model -> Html Msg
+viewDrawCard model =
+    if List.length model.shuffledDeck == 0 then
+        empty
+    else
+        div [ class "pCard back right pointer", onClick DrawCard ] [ text "*" ]
 
 
 viewMessage : Model -> Html Msg
@@ -192,6 +192,28 @@ viewCard card =
     div [ class "player-card" ]
         [ paintCard card True
         ]
+
+
+viewDiscardPile : List Card -> Html Msg
+viewDiscardPile discardPile =
+    case (List.head discardPile) of
+        Nothing ->
+            empty
+
+        Just card ->
+            paintCard card False
+
+
+viewCurrentSuit : Suit -> Html Msg
+viewCurrentSuit suit =
+    let
+        ( _, suitText ) =
+            getSuitPaintInfoFromSuit suit
+
+        color =
+            getColorFromSuit suit
+    in
+        div [ class "current-suit", style [ ( "color", color ) ] ] [ text suitText ]
 
 
 paintCard : Card -> Bool -> Html Msg
@@ -267,28 +289,6 @@ getColorFromSuit suit =
 
         _ ->
             "black"
-
-
-viewDiscardPile : List Card -> Html Msg
-viewDiscardPile discardPile =
-    case (List.head discardPile) of
-        Nothing ->
-            empty
-
-        Just card ->
-            paintCard card False
-
-
-viewCurrentSuit : Suit -> Html Msg
-viewCurrentSuit suit =
-    let
-        ( _, suitText ) =
-            getSuitPaintInfoFromSuit suit
-
-        color =
-            getColorFromSuit suit
-    in
-        div [ class "current-suit", style [ ( "color", color ) ] ] [ text suitText ]
 
 
 empty : Html Msg
