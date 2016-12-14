@@ -3,27 +3,31 @@
 
 .discard-pile {
   img {
-    width : 20px;
-    height : 20px;
+    width : 20 px;
+    height : 20 px;
   }
-  font-size : 2.5em;
+  font-size : 2.5 em;
   font-weight : bold;
 }
 .current-suit {
   img {
-    width : 40px;
-    height : 40px
+    width : 40 px;
+    height : 40 px;
   }
-  font-size : 2.5em;
+  font-size : 2.5 em;
   font-weight : bold;
 }
 
 .player-card {
-  width : 100px;
-  height : 120px;
+  width : 100 px;
+  height : 120 px;
   display: inline-block;
   margin: 0;
   //border: 3px solid #73AD21; 
+}
+
+.message-area {
+    min-height : 3.5em;
 }
 
 .pointer {

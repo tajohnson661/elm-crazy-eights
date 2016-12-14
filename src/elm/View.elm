@@ -5,7 +5,7 @@ import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, ul, li, nav, a, i, footer)
 import Html.Attributes exposing (class, style, src, href, id, attribute)
 import Html.Events exposing (onClick)
-import Cards exposing (Card, Suit, Face, getSuitFromCard, getFaceFromCard)
+import Cards exposing (Card, Suit, Face, getSuitFromCard, getFaceFromCard, sortHand)
 import Dialog
 
 
@@ -137,11 +137,7 @@ viewDrawCard model =
 viewMiddleSection : Model -> Html Msg
 viewMiddleSection model =
     div []
-        [ div [ class "row center" ]
-            [ div [ class "col s12" ]
-                [ h5 [] [ text model.message ]
-                ]
-            ]
+        [ viewMessage model
         , div [ class "row" ]
             [ div [ class "col s12 m5" ]
                 [ viewDrawCard model ]
@@ -153,11 +149,20 @@ viewMiddleSection model =
         ]
 
 
+viewMessage : Model -> Html Msg
+viewMessage model =
+    div [ class "row center  message-area" ]
+        [ div [ class "col s12" ]
+            [ h5 [] [ text model.message ]
+            ]
+        ]
+
+
 viewDealerHand : List Card -> Html Msg
 viewDealerHand hand =
     div []
         [ div [ class "row center" ]
-            [ h3 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
+            [ h4 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
         , div [ class "row center" ]
             (List.map paintBack hand)
         ]
@@ -172,9 +177,9 @@ viewPlayerHand : Model -> Maybe Card -> Html Msg
 viewPlayerHand model compareCard =
     div []
         [ div [ class "row center" ]
-            [ h3 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
+            [ h4 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
         , div [ class "row center" ]
-            (List.map viewCard model.playerHand)
+            (List.map viewCard (Cards.sortHand model.playerHand))
         ]
 
 
@@ -247,25 +252,6 @@ getFacePaintInfoFromFace faceValue =
             ( "rank-" ++ toString faceValue, toString faceValue )
 
 
-imageFromSuit : Suit -> String
-imageFromSuit suit =
-    case suit of
-        'H' ->
-            "static/img/heart.png"
-
-        'S' ->
-            "static/img/spade.png"
-
-        'C' ->
-            "static/img/club.gif"
-
-        'D' ->
-            "static/img/diamond.png"
-
-        _ ->
-            "static/img/heart1.png"
-
-
 viewDiscardPile : List Card -> Html Msg
 viewDiscardPile discardPile =
     case (List.head discardPile) of
@@ -290,25 +276,6 @@ viewCurrentSuit suit =
             [ span [ class "rank" ] [ text "" ]
             , span [ class "suit" ] [ text suitText ]
             ]
-
-
-toFaceName : Int -> String
-toFaceName faceValue =
-    case faceValue of
-        1 ->
-            "Ace"
-
-        11 ->
-            "Jack"
-
-        12 ->
-            "Queen"
-
-        13 ->
-            "King"
-
-        _ ->
-            (toString faceValue)
 
 
 

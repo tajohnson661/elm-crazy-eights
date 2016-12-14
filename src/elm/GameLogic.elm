@@ -73,7 +73,10 @@ playerDraws model =
                     newModel =
                         reshuffleIfDeckEmpty model
                 in
-                    { newModel | playerHand = card :: newModel.playerHand }
+                    { newModel
+                        | playerHand = card :: newModel.playerHand
+                        , message = "You drew the " ++ (Cards.toFullString card)
+                    }
 
 
 dealerPlaysCard : Card -> Model -> Model
@@ -86,7 +89,7 @@ dealerPlaysCard card model =
             { model
                 | discardPile = card :: model.discardPile
                 , dealerHand = newDealerHand
-                , message = "Dealer plays card " ++ (toString card)
+                , message = "Dealer plays the " ++ (Cards.toFullString card)
             }
     in
         if Cards.getFaceFromCard card == 8 then
