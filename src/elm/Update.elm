@@ -1,6 +1,6 @@
 module Update exposing (update)
 
-import Model exposing (Model, WhoseTurn(..))
+import Model exposing (Model)
 import Messages exposing (..)
 import Utils exposing (postMessage)
 import Cards exposing (Card, removeCard, getDeckTopCard)
@@ -19,7 +19,7 @@ update msg model =
                 | shuffledDeck = []
                 , playerHand = []
                 , dealerHand = []
-                , whoseTurn = None
+                , inProgress = False
                 , message = " "
               }
             , Ports.getTime ()
@@ -39,7 +39,7 @@ update msg model =
                     , dealerHand = dealerHand
                     , discardPile = discardPile
                     , currentSuit = getCurrentSuitFromDiscard discardPile
-                    , whoseTurn = Player
+                    , inProgress = True
                   }
                 , Cmd.none
                 )
@@ -63,7 +63,7 @@ update msg model =
             if List.length model.playerHand == 0 then
                 ( { model
                     | message = "You Win!!!"
-                    , whoseTurn = None
+                    , inProgress = False
                   }
                 , Cmd.none
                 )
@@ -74,7 +74,7 @@ update msg model =
             if List.length model.dealerHand == 0 then
                 ( { model
                     | message = "Dealer Wins!!!"
-                    , whoseTurn = None
+                    , inProgress = False
                   }
                 , Cmd.none
                 )

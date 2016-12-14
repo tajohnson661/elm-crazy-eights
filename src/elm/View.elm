@@ -1,12 +1,11 @@
 module View exposing (view)
 
-import Model exposing (Model, WhoseTurn(..))
+import Model exposing (Model)
 import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, ul, li, nav, a, i, footer)
 import Html.Attributes exposing (class, style, src, href, id, attribute)
 import Html.Events exposing (onClick)
 import Cards exposing (Card, Suit, Face, getSuitFromCard, getFaceFromCard)
-import GameLogic exposing (..)
 import Dialog
 
 
@@ -71,8 +70,8 @@ viewBody model =
         compareCard =
             List.head model.discardPile
     in
-        case model.whoseTurn of
-            Player ->
+        case model.inProgress of
+            True ->
                 div [ class "container playingCards simpleCards" ]
                     [ viewDealerHand model.dealerHand
                     , viewMiddleSection model
@@ -85,7 +84,7 @@ viewBody model =
                     , viewPlayerHand model compareCard
                     ]
 
-            _ ->
+            False ->
                 div [ class "row center" ]
                     [ div [ class "col s12" ]
                         [ h4 [] [ text model.message ]
@@ -175,12 +174,12 @@ viewPlayerHand model compareCard =
         [ div [ class "row center" ]
             [ h3 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
         , div [ class "row center" ]
-            (List.map (viewCard compareCard model.currentSuit model.whoseTurn) model.playerHand)
+            (List.map viewCard model.playerHand)
         ]
 
 
-viewCard : Maybe Card -> Suit -> WhoseTurn -> Card -> Html Msg
-viewCard compareCard currentSuit whoseTurn card =
+viewCard : Card -> Html Msg
+viewCard card =
     div [ class "player-card" ]
         [ paintCard card True
         ]

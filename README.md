@@ -38,10 +38,10 @@ npm run build
 * Files are saved into the `/dist` folder
 * To check it, open `dist/index.html`
 
-### Elm Development Notes:
+### Development Notes:
 
 * I used [elm-webpack-starter](https://github.com/moarwick/elm-webpack-starter) as a starter app
-
+* I used [CSS-Playing-Cards](http://selfthinker.github.com/CSS-Playing-Cards/) by Anika Henke <anika@selfthinker.org> as the starting point for the playing card CSS
 
 ### Game Development Notes:
 

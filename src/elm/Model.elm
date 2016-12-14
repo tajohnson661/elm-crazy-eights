@@ -1,4 +1,4 @@
-module Model exposing (Model, init, WhoseTurn(..))
+module Model exposing (Model, init)
 
 import Cards exposing (Card, Suit)
 import Messages exposing (..)
@@ -7,19 +7,13 @@ import Messages exposing (..)
 -- MODEL
 
 
-type WhoseTurn
-    = Player
-    | Dealer
-    | None
-
-
 type alias Model =
     { shuffledDeck : List Card
     , playerHand : List Card
     , dealerHand : List Card
     , discardPile : List Card
     , currentSuit : Suit
-    , whoseTurn : WhoseTurn
+    , inProgress : Bool
     , message : String
     , showDialog : Bool
     }
@@ -32,7 +26,7 @@ init =
       , dealerHand = []
       , discardPile = []
       , currentSuit = 'H'
-      , whoseTurn = None
+      , inProgress = False
       , message = " "
       , showDialog = False
       }

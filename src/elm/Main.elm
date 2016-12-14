@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Model exposing (Model, WhoseTurn(..))
+import Model exposing (Model)
 import Update
 import Messages exposing (..)
 import Ports

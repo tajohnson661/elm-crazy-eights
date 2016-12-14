@@ -1,7 +1,7 @@
 module GameLogic exposing (..)
 
 import Cards exposing (Card, Face, Suit)
-import Model exposing (Model, WhoseTurn(..))
+import Model exposing (Model)
 import Utils exposing (postMessage)
 import Messages exposing (..)
 
