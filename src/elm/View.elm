@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Model exposing (Model)
 import Messages exposing (..)
-import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, ul, li, nav, a, i, footer)
+import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, h6, ul, li, nav, a, i, footer)
 import Html.Attributes exposing (class, style, src, href, id, attribute)
 import Html.Events exposing (onClick)
 import Cards exposing (Card, Suit, Face, getSuitFromCard, getFaceFromCard, sortHand)
@@ -27,7 +27,7 @@ viewHeader : Model -> Html Msg
 viewHeader model =
     nav [ class "light-blue lighten-1", attribute "role" "navigation" ]
         [ div [ class "nav-wrapper container" ]
-            [ a [ id "logo-container", href "#", class "brand-logo" ] [ text "Crazy Eights" ]
+            [ a [ id "logo-container", href "/", class "brand-logo" ] [ text "Crazy Eights" ]
             , ul [ class "right hide-on-med-and-down" ]
                 [ li []
                     [ a [ onClick StartShuffle ] [ text "New game" ] ]
@@ -47,19 +47,14 @@ viewFooter model =
     footer [ class "page-footer orange" ]
         [ div [ class "container" ]
             [ div [ class "row" ]
-                [ div [ class "col l6 s12" ]
-                    [ h5 [ class "white-text" ] [ text "Company Bio" ]
-                    , p [ class "grey-text text-lighten-4" ] [ text "TJ Enterprises" ]
+                [ div [ class "col l6 s12 white-text extra-footer-stuff" ]
+                    [ span [] [ text "Tom Johnson" ]
+                    , span [] [ a [ href "https://github.com/tajohnson661" ] [ text " github:@tajohnson661" ] ]
                     ]
-                , div [ class "col l3 s12" ]
-                    [ text "hi" ]
-                , div [ class "col l3 s12" ]
-                    [ text "hi again" ]
+                , div [ class "col l4" ] []
+                , div [ class "col l2 s12 white-text" ]
+                    [ text "Copyright 2016" ]
                 ]
-            ]
-        , div [ class "footer-copyright" ]
-            [ div [ class "container" ]
-                [ span [] [ text "Made by me" ] ]
             ]
         ]
 
@@ -83,14 +78,14 @@ viewBody model =
                         ]
                     , viewDealerHand model.dealerHand
                     , viewMiddleSection model
+                    , viewMessage model
                     , viewPlayerHand model compareCard
                     ]
 
             False ->
-                div [ class "row center" ]
-                    [ div [ class "col s12" ]
-                        [ h4 [] [ text model.message ]
-                        ]
+                div [ class "row center initial-screen" ]
+                    [ viewMessage model
+                    , button [ class "btn btn-large btn-success", onClick StartShuffle ] [ text "Click to start" ]
                     ]
 
 
@@ -133,29 +128,34 @@ viewDrawCard model =
     if List.length model.shuffledDeck == 0 then
         empty
     else
-        div [ class "pCard back right", onClick DrawCard ] [ text "*" ]
+        div [ class "pCard back right pointer", onClick DrawCard ] [ text "*" ]
 
 
 viewMiddleSection : Model -> Html Msg
 viewMiddleSection model =
     div []
-        [ viewMessage model
-        , div [ class "row" ]
-            [ div [ class "col s12 m5" ]
-                [ viewDrawCard model ]
-            , div [ class "col s12 m2" ]
-                [ viewDiscardPile model.discardPile ]
-            , div [ class "col s12 m5" ]
-                [ viewCurrentSuit model.currentSuit ]
+        [ div [ class "row" ]
+            [ div [ class "col s12 m3" ] []
+            , div [ class "col s12 m6" ]
+                [ div [ class "row middle-section grey lighten-3" ]
+                    [ div [ class "col s12 m4" ]
+                        [ viewDrawCard model ]
+                    , div [ class "col s12 m4" ]
+                        [ viewDiscardPile model.discardPile ]
+                    , div [ class "col s12 m4" ]
+                        [ viewCurrentSuit model.currentSuit ]
+                    ]
+                ]
+            , div [ class "col s12 m3" ] []
             ]
         ]
 
 
 viewMessage : Model -> Html Msg
 viewMessage model =
-    div [ class "row center  message-area" ]
+    div [ class "row center " ]
         [ div [ class "col s3" ] []
-        , div [ class "col s6 grey lighten-3" ]
+        , div [ class "col s6 grey lighten-3 message-area" ]
             [ h5 [] [ text model.message ]
             ]
         , div [ class "col s3" ] []
@@ -166,7 +166,7 @@ viewDealerHand : List Card -> Html Msg
 viewDealerHand hand =
     div []
         [ div [ class "row center" ]
-            [ h4 [ class "header col s12 orange-text" ] [ text "Dealer hand" ] ]
+            [ h4 [ class "header col s12 orange-text" ] [ text "Dealer" ] ]
         , div [ class "row center" ]
             (List.map paintBack hand)
         ]
@@ -181,7 +181,7 @@ viewPlayerHand : Model -> Maybe Card -> Html Msg
 viewPlayerHand model compareCard =
     div []
         [ div [ class "row center" ]
-            [ h4 [ class "header col s12 orange-text" ] [ text "Player hand" ] ]
+            [ h4 [ class "header col s12 orange-text" ] [ text "Player" ] ]
         , div [ class "row center" ]
             (List.map viewCard (Cards.sortHand model.playerHand))
         ]
@@ -256,6 +256,19 @@ getFacePaintInfoFromFace faceValue =
             ( "rank-" ++ toString faceValue, toString faceValue )
 
 
+getColorFromSuit : Suit -> String
+getColorFromSuit suit =
+    case suit of
+        'H' ->
+            "red"
+
+        'D' ->
+            "red"
+
+        _ ->
+            "black"
+
+
 viewDiscardPile : List Card -> Html Msg
 viewDiscardPile discardPile =
     case (List.head discardPile) of
@@ -268,32 +281,14 @@ viewDiscardPile discardPile =
 
 viewCurrentSuit : Suit -> Html Msg
 viewCurrentSuit suit =
-    -- paintCard ( 0, suit )
     let
-        ( suitClass, suitText ) =
+        ( _, suitText ) =
             getSuitPaintInfoFromSuit suit
 
-        classText =
-            "pCard " ++ suitClass
+        color =
+            getColorFromSuit suit
     in
-        div [ class classText ]
-            [ span [ class "rank" ] [ text "\x2006" ]
-            , span [ class "suit" ] [ text suitText ]
-            ]
-
-
-
--- CSS STYLES in line... really just to see how it's done.  Should be in CSS file
-
-
-styles : { img : List ( String, String ) }
-styles =
-    { img =
-        [ ( "width", "20px" )
-        , ( "height", "20px" )
-        , ( "margin", "4px" )
-        ]
-    }
+        div [ class "current-suit", style [ ( "color", color ) ] ] [ text suitText ]
 
 
 empty : Html Msg

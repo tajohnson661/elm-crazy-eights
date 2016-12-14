@@ -13,6 +13,7 @@ module Cards
         , getMostProlificSuit
         , toFullString
         , sortHand
+        , toSuitName
         )
 
 import Utils

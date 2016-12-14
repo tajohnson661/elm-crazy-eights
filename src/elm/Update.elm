@@ -20,7 +20,7 @@ update msg model =
                 , playerHand = []
                 , dealerHand = []
                 , inProgress = False
-                , message = "Click on a card in your hand to play"
+                , message = "To play, click on a card in your hand or draw"
               }
             , Ports.getTime ()
             )

@@ -1,42 +1,42 @@
 
 // can add Boostrap/MaterialUI overrides, additional Sass/CSS below...
 
-.discard-pile {
-  img {
-    width : 20 px;
-    height : 20 px;
-  }
-  font-size : 2.5 em;
-  font-weight : bold;
-}
-.current-suit {
-  img {
-    width : 40 px;
-    height : 40 px;
-  }
-  font-size : 2.5 em;
-  font-weight : bold;
-}
-
 .player-card {
-  width : 100 px;
-  height : 120 px;
+  width : 80px;
+  height : 100px;
   display: inline-block;
   margin: 0;
   //border: 3px solid #73AD21; 
 }
 
 .message-area {
-    min-height : 3.5em;
+  min-height : 3.5em;
+  border-radius : 10px;
 }
 
 .pointer {
   cursor: pointer;
 }
-.on-top {
-  //position: relative;
+
+.initial-screen {
+  margin : 100px;
+  margin-top : 110px;
 }
 
+.middle-section {
+  padding: 3em;
+  margin-top: 30px;
+  border-radius : 5px;
+}
+
+.current-suit {
+  margin-top : 5px;
+  font-size: 4em;
+}
+
+.extra-footer-stuff {
+  margin-bottom: 20px;
+}
 
 /**
  * Styles for CSS Playing Cards

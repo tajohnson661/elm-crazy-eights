@@ -27,7 +27,7 @@ init =
       , discardPile = []
       , currentSuit = 'H'
       , inProgress = False
-      , message = " "
+      , message = "Welcome to Crazy Eights"
       , showDialog = False
       }
     , Cmd.none

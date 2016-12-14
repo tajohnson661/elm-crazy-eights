@@ -1,6 +1,6 @@
 module GameLogic exposing (..)
 
-import Cards exposing (Card, Face, Suit)
+import Cards exposing (Card, Face, Suit, toSuitName)
 import Model exposing (Model)
 import Utils exposing (postMessage)
 import Messages exposing (..)
@@ -91,9 +91,15 @@ dealerPlaysCard card model =
                 , dealerHand = newDealerHand
                 , message = "Dealer plays the " ++ (Cards.toFullString card)
             }
+
+        mostProlificSuit =
+            Cards.getMostProlificSuit newDealerHand
     in
         if Cards.getFaceFromCard card == 8 then
-            { newModel | currentSuit = Cards.getMostProlificSuit newModel.dealerHand }
+            { newModel
+                | currentSuit = mostProlificSuit
+                , message = newModel.message ++ "... New suit: " ++ (Cards.toSuitName mostProlificSuit)
+            }
         else
             { newModel | currentSuit = Cards.getSuitFromCard card }
 
