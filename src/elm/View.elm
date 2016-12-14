@@ -73,14 +73,16 @@ viewBody model =
         case model.inProgress of
             True ->
                 div [ class "container playingCards simpleCards" ]
-                    [ viewDealerHand model.dealerHand
+                    [ div [ class "on-top" ]
+                        [ Dialog.view
+                            (if model.showDialog then
+                                Just (dialogConfig model)
+                             else
+                                Nothing
+                            )
+                        ]
+                    , viewDealerHand model.dealerHand
                     , viewMiddleSection model
-                    , Dialog.view
-                        (if model.showDialog then
-                            Just (dialogConfig model)
-                         else
-                            Nothing
-                        )
                     , viewPlayerHand model compareCard
                     ]
 
