@@ -127,18 +127,18 @@ viewMiddleSection : Model -> Html Msg
 viewMiddleSection model =
     div []
         [ div [ class "row" ]
-            [ div [ class "col s12 m3" ] []
+            [ div [ class "col m3" ] []
             , div [ class "col s12 m6" ]
                 [ div [ class "row middle-section grey lighten-3" ]
-                    [ div [ class "col s12 m4" ]
+                    [ div [ class "col s4 m4" ]
                         [ viewDrawCard model ]
-                    , div [ class "col s12 m4" ]
+                    , div [ class "col s4 m4" ]
                         [ viewDiscardPile model.discardPile ]
-                    , div [ class "col s12 m4" ]
+                    , div [ class "col s4 m4" ]
                         [ viewCurrentSuit model.currentSuit ]
                     ]
                 ]
-            , div [ class "col s12 m3" ] []
+            , div [ class "col m3" ] []
             ]
         ]
 
@@ -154,11 +154,11 @@ viewDrawCard model =
 viewMessage : Model -> Html Msg
 viewMessage model =
     div [ class "row center " ]
-        [ div [ class "col s3" ] []
-        , div [ class "col s6 grey lighten-3 message-area" ]
+        [ div [ class "col m3" ] []
+        , div [ class "col s12 m6 grey lighten-3 message-area" ]
             [ h5 [] [ text model.message ]
             ]
-        , div [ class "col s3" ] []
+        , div [ class "col m6" ] []
         ]
 
 
@@ -181,9 +181,9 @@ viewPlayerHand : Model -> Maybe Card -> Html Msg
 viewPlayerHand model compareCard =
     div []
         [ div [ class "row center" ]
-            [ h4 [ class "header col s12 orange-text" ] [ text "Player" ] ]
-        , div [ class "row center" ]
             (List.map viewCard (Cards.sortHand model.playerHand))
+        , div [ class "row center" ]
+            [ h4 [ class "header col s12 orange-text" ] [ text "Player" ] ]
         ]
 
 
@@ -213,7 +213,8 @@ viewCurrentSuit suit =
         color =
             getColorFromSuit suit
     in
-        div [ class "current-suit", style [ ( "color", color ) ] ] [ text suitText ]
+        div [ class "current-suit", style [ ( "color", color ) ] ]
+            [ text suitText ]
 
 
 paintCard : Card -> Bool -> Html Msg
