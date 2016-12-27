@@ -5,7 +5,7 @@ import Messages exposing (..)
 import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, h6, ul, li, nav, a, i, footer)
 import Html.Attributes exposing (class, style, src, href, id, attribute)
 import Html.Events exposing (onClick)
-import Cards exposing (Card, Suit, Face, getSuitFromCard, getFaceFromCard, sortHand)
+import Cards exposing (Card, Suit(..), Face, getSuitFromCard, getFaceFromCard, sortHand)
 import Dialog
 
 
@@ -94,22 +94,22 @@ dialogConfig model =
             (div []
                 [ button
                     [ class "btn btn-success"
-                    , onClick (Acknowledge 'H')
+                    , onClick (Acknowledge Hearts)
                     ]
                     [ text "Hearts" ]
                 , button
                     [ class "btn btn-success"
-                    , onClick (Acknowledge 'C')
+                    , onClick (Acknowledge Clubs)
                     ]
                     [ text "Clubs" ]
                 , button
                     [ class "btn btn-success"
-                    , onClick (Acknowledge 'D')
+                    , onClick (Acknowledge Diamonds)
                     ]
                     [ text "Diamonds" ]
                 , button
                     [ class "btn btn-success"
-                    , onClick (Acknowledge 'S')
+                    , onClick (Acknowledge Spades)
                     ]
                     [ text "Spades" ]
                 ]
@@ -238,19 +238,16 @@ paintCard card allowClick =
 getSuitPaintInfoFromSuit : Suit -> ( String, String )
 getSuitPaintInfoFromSuit suit =
     case suit of
-        'H' ->
+        Hearts ->
             ( "hearts", "♥" )
 
-        'D' ->
+        Diamonds ->
             ( "diams", "♦" )
 
-        'C' ->
+        Clubs ->
             ( "clubs", "♣" )
 
-        'S' ->
-            ( "spades", "♠" )
-
-        _ ->
+        Spades ->
             ( "spades", "♠" )
 
 
@@ -276,10 +273,10 @@ getFacePaintInfoFromFace faceValue =
 getColorFromSuit : Suit -> String
 getColorFromSuit suit =
     case suit of
-        'H' ->
+        Hearts ->
             "red"
 
-        'D' ->
+        Diamonds ->
             "red"
 
         _ ->

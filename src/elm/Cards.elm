@@ -2,7 +2,7 @@ module Cards
     exposing
         ( Card
         , Face
-        , Suit
+        , Suit(..)
         , shuffleDeck
         , initialDeck
         , dealCards
@@ -25,8 +25,11 @@ type alias Face =
     Int
 
 
-type alias Suit =
-    Char
+type Suit
+    = Hearts
+    | Spades
+    | Clubs
+    | Diamonds
 
 
 type alias Card =
@@ -40,7 +43,7 @@ faces =
 
 suits : List Suit
 suits =
-    [ 'H', 'D', 'C', 'S' ]
+    [ Hearts, Spades, Clubs, Diamonds ]
 
 
 allCards : List a -> List b -> List ( a, b )
@@ -110,7 +113,12 @@ getMostProlificSuit : List Card -> Suit
 getMostProlificSuit cards =
     let
         theDict =
-            Dict.fromList [ ( 'H', 0 ), ( 'D', 0 ), ( 'S', 0 ), ( 'C', 0 ) ]
+            Dict.fromList
+                [ ( rankOfSuit Hearts, 0 )
+                , ( rankOfSuit Diamonds, 0 )
+                , ( rankOfSuit Spades, 0 )
+                , ( rankOfSuit Clubs, 0 )
+                ]
 
         maybeTuple =
             cards
@@ -122,40 +130,37 @@ getMostProlificSuit cards =
     in
         case maybeTuple of
             Nothing ->
-                'H'
+                Hearts
 
             Just tuple ->
-                Tuple.first tuple
+                suitFromRank (Tuple.first tuple)
 
 
-countThem : Card -> Dict Char Int -> Dict Char Int
+countThem : Card -> Dict comparable Int -> Dict comparable Int
 countThem card currentValues =
     case getSuitFromCard card of
-        'H' ->
-            addTo 'H' currentValues
+        Hearts ->
+            addTo Hearts currentValues
 
-        'D' ->
-            addTo 'D' currentValues
+        Diamonds ->
+            addTo Diamonds currentValues
 
-        'S' ->
-            addTo 'S' currentValues
+        Spades ->
+            addTo Spades currentValues
 
-        'C' ->
-            addTo 'C' currentValues
-
-        _ ->
-            currentValues
+        Clubs ->
+            addTo Clubs currentValues
 
 
-addTo : Suit -> Dict Char Int -> Dict Char Int
+addTo : Suit -> Dict comparable Int -> Dict comparable Int
 addTo suit dict =
     let
         maybeCurCount =
-            Dict.get suit dict
+            Dict.get (rankOfSuit suit) dict
     in
         case maybeCurCount of
             Just curCount ->
-                Dict.insert suit (curCount + 1) dict
+                Dict.insert (rankOfSuit suit) (curCount + 1) dict
 
             Nothing ->
                 dict
@@ -193,20 +198,17 @@ toFaceName faceValue =
 toSuitName : Suit -> String
 toSuitName suit =
     case suit of
-        'H' ->
+        Hearts ->
             "Hearts"
 
-        'D' ->
+        Diamonds ->
             "Diamonds"
 
-        'C' ->
+        Clubs ->
             "Clubs"
 
-        'S' ->
+        Spades ->
             "Spades"
-
-        _ ->
-            "Whoops"
 
 
 sortHand : List Card -> List Card
@@ -245,20 +247,36 @@ cardCompare a b =
 rankOfSuit : Suit -> comparable
 rankOfSuit suit =
     case suit of
-        'S' ->
+        Spades ->
             4
 
-        'D' ->
+        Diamonds ->
             3
 
-        'C' ->
+        Clubs ->
             2
 
-        'H' ->
+        Hearts ->
             1
 
+
+suitFromRank : comparable -> Suit
+suitFromRank suitValue =
+    case suitValue of
+        4 ->
+            Spades
+
+        3 ->
+            Diamonds
+
+        2 ->
+            Clubs
+
+        1 ->
+            Hearts
+
         _ ->
-            0
+            Hearts
 
 
 rankOfFace : Face -> Int
