@@ -1,6 +1,6 @@
 module GameLogic exposing (..)
 
-import Cards exposing (Card, Face, Suit, toSuitName)
+import Cards exposing (Card, Face, Suit(..), toSuitName)
 import Model exposing (Model)
 import Utils exposing (postMessage)
 import Messages exposing (..)
@@ -183,7 +183,7 @@ getCurrentSuitFromDiscard cards =
     in
         case topOfCards of
             Nothing ->
-                'H'
+                Hearts
 
             Just card ->
                 Cards.getSuitFromCard card

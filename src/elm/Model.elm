@@ -1,6 +1,6 @@
 module Model exposing (Model, init)
 
-import Cards exposing (Card, Suit)
+import Cards exposing (Card, Suit(..))
 import Messages exposing (..)
 
 
@@ -25,7 +25,7 @@ init =
       , playerHand = []
       , dealerHand = []
       , discardPile = []
-      , currentSuit = 'H'
+      , currentSuit = Hearts
       , inProgress = False
       , message = "Welcome to Crazy Eights"
       , showDialog = False

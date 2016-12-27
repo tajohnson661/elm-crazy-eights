@@ -4,7 +4,7 @@ import Test exposing (..)
 import Expect
 import Fuzz exposing (list, int, tuple, string)
 import String
-import Cards exposing (Card, Face, Suit)
+import Cards exposing (Card, Face, Suit(..))
 import Utils exposing (listsToTupleList, listsToTupleListMap)
 import GameLogic exposing (isCardPlayable)
 
@@ -16,27 +16,35 @@ faces =
 
 suits : List Suit
 suits =
-    [ 'H', 'D' ]
+    [ Hearts, Diamonds ]
 
 
 deck : List Card
 deck =
-    [ ( 1, 'H' ), ( 2, 'H' ), ( 3, 'H' ), ( 4, 'H' ), ( 1, 'D' ), ( 2, 'D' ), ( 3, 'D' ), ( 4, 'D' ) ]
+    [ ( 1, Hearts )
+    , ( 2, Hearts )
+    , ( 3, Hearts )
+    , ( 4, Hearts )
+    , ( 1, Diamonds )
+    , ( 2, Diamonds )
+    , ( 3, Diamonds )
+    , ( 4, Diamonds )
+    ]
 
 
 discardPile : List Card
 discardPile =
-    [ ( 7, 'H' ), ( 4, 'D' ) ]
+    [ ( 7, Hearts ), ( 4, Diamonds ) ]
 
 
 card1 : Card
 card1 =
-    ( 7, 'C' )
+    ( 7, Clubs )
 
 
 card2 : Card
 card2 =
-    ( 1, 'C' )
+    ( 1, Clubs )
 
 
 all : Test
@@ -45,12 +53,12 @@ all =
         [ describe "Card module tests"
             [ test "isCardPlayable" <|
                 \() ->
-                    isCardPlayable (List.head discardPile) 'H' card1
+                    isCardPlayable (List.head discardPile) Hearts card1
                         |> Expect.equal
                             True
             , test "isCardPlayable" <|
                 \() ->
-                    Expect.equal (isCardPlayable (List.head discardPile) 'H' card2) False
+                    Expect.equal (isCardPlayable (List.head discardPile) Hearts card2) False
             ]
         , describe "Util tests"
             [ test "listsToTupleList" <|
