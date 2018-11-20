@@ -12,7 +12,6 @@ Clone this repo into a new project folder, e.g. `my-elm-project`:
 git clone https://github.com/tajohnson661/elm-crazy-eights my-elm-project
 cd my-elm-project
 npm install
-elm package install
 ```
 
 
@@ -21,18 +20,19 @@ elm package install
 ```
 npm start
 ```
-* Access app at `http://localhost:8080/`
+* Access app at `http://localhost:3000/`
 * The entry point file is `src/elm/Main.elm`
 * Browser will refresh automatically on any file changes..
 
 
 ### Tests:
 ```
-elm-test
+npm test
 ```
 ### Build & bundle for prod:
 ```
-npm run build
+npm run build // webpack -p
+npm run prod // webpack
 ```
 
 * Files are saved into the `/dist` folder
@@ -40,7 +40,7 @@ npm run build
 
 ### Development Notes:
 
-* I used [elm-webpack-starter](https://github.com/moarwick/elm-webpack-starter) as a starter app
+* I used [elm-webpack-starter](https://github.com/simonh1000/elm-webpack-starter) as a starter app
 * I used [CSS-Playing-Cards](http://selfthinker.github.com/CSS-Playing-Cards/) by Anika Henke <anika@selfthinker.org> as the starting point for the playing card CSS
 
 ### Game Development Notes:

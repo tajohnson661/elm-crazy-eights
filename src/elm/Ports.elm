@@ -1,4 +1,4 @@
-port module Ports exposing (..)
+port module Ports exposing (getTime, loadTime)
 
 
 port loadTime : (Int -> msg) -> Sub msg

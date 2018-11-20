@@ -1,18 +1,20 @@
 module Update exposing (update)
 
-import Model exposing (Model)
-import Messages exposing (..)
-import Utils exposing (postMessage)
-import Cards exposing (Card, removeCard, getDeckTopCard)
+import Cards exposing (Card, CardsDealt, getDeckTopCard, removeCard)
 import GameLogic exposing (..)
+import Messages exposing (..)
+import Model exposing (Model)
 import Ports
+import Utils exposing (postMessage)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NoOp ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
         StartShuffle ->
             ( { model
@@ -30,19 +32,19 @@ update msg model =
                 shuffledDeck =
                     Cards.shuffleDeck Cards.initialDeck timeVal
 
-                ( remainingDeck, playerHand, dealerHand, discardPile ) =
+                { workingCards, playerHand, dealerHand, discardPile } =
                     Cards.dealCards shuffledDeck
             in
-                ( { model
-                    | shuffledDeck = remainingDeck
-                    , playerHand = playerHand
-                    , dealerHand = dealerHand
-                    , discardPile = discardPile
-                    , currentSuit = getCurrentSuitFromDiscard discardPile
-                    , inProgress = True
-                  }
-                , Cmd.none
-                )
+            ( { model
+                | shuffledDeck = workingCards
+                , playerHand = playerHand
+                , dealerHand = dealerHand
+                , discardPile = discardPile
+                , currentSuit = getCurrentSuitFromDiscard discardPile
+                , inProgress = True
+              }
+            , Cmd.none
+            )
 
         DrawCard ->
             ( playerDraws model, Cmd.none )
@@ -52,12 +54,12 @@ update msg model =
                 compareCard =
                     List.head model.discardPile
             in
-                case isCardPlayable compareCard model.currentSuit card of
-                    True ->
-                        playerPlaysCard card model
+            case isCardPlayable compareCard model.currentSuit card of
+                True ->
+                    playerPlaysCard card model
 
-                    False ->
-                        ( { model | message = "You can't play that card" }, Cmd.none )
+                False ->
+                    ( { model | message = "You can't play that card" }, Cmd.none )
 
         DealersTurn ->
             if List.length model.playerHand == 0 then
@@ -67,6 +69,7 @@ update msg model =
                   }
                 , Cmd.none
                 )
+
             else
                 ( dealerPlays model, postMessage DealersTurnDone )
 
@@ -78,8 +81,11 @@ update msg model =
                   }
                 , Cmd.none
                 )
+
             else
-                model ! []
+                ( model
+                , Cmd.none
+                )
 
         Acknowledge suit ->
             ( { model

@@ -1,9 +1,9 @@
-module GameLogic exposing (..)
+module GameLogic exposing (askUserForSuit, dealerDraws, dealerPlays, dealerPlaysCard, eightsCompare, getCurrentSuitFromDiscard, isCardPlayable, playerDraws, playerPlaysCard, reshuffle, reshuffleIfDeckEmpty)
 
 import Cards exposing (Card, Face, Suit(..), toSuitName)
+import Messages exposing (..)
 import Model exposing (Model)
 import Utils exposing (postMessage)
-import Messages exposing (..)
 
 
 isCardPlayable : Maybe Card -> Suit -> Card -> Bool
@@ -15,10 +15,13 @@ isCardPlayable maybeTopOfDiscard currentSuit card =
         Just topOfDiscard ->
             if Cards.getFaceFromCard card == 8 then
                 True
+
             else if Cards.getFaceFromCard card == Cards.getFaceFromCard topOfDiscard then
                 True
+
             else if Cards.getSuitFromCard card == currentSuit then
                 True
+
             else
                 False
 
@@ -32,12 +35,12 @@ dealerPlays model =
                 |> List.sortWith eightsCompare
                 |> List.head
     in
-        case cardToPlay of
-            Nothing ->
-                dealerPlays (dealerDraws model)
+    case cardToPlay of
+        Nothing ->
+            dealerPlays (dealerDraws model)
 
-            Just card ->
-                dealerPlaysCard card model
+        Just card ->
+            dealerPlaysCard card model
 
 
 dealerDraws : Model -> Model
@@ -46,16 +49,16 @@ dealerDraws model =
         drawnCard =
             Cards.getDeckTopCard model.shuffledDeck
     in
-        case drawnCard of
-            Nothing ->
-                model
+    case drawnCard of
+        Nothing ->
+            model
 
-            Just card ->
-                let
-                    newModel =
-                        reshuffleIfDeckEmpty model
-                in
-                    { newModel | dealerHand = card :: newModel.dealerHand }
+        Just card ->
+            let
+                newModel =
+                    reshuffleIfDeckEmpty model
+            in
+            { newModel | dealerHand = card :: newModel.dealerHand }
 
 
 playerDraws : Model -> Model
@@ -64,19 +67,19 @@ playerDraws model =
         drawnCard =
             Cards.getDeckTopCard model.shuffledDeck
     in
-        case drawnCard of
-            Nothing ->
-                model
+    case drawnCard of
+        Nothing ->
+            model
 
-            Just card ->
-                let
-                    newModel =
-                        reshuffleIfDeckEmpty model
-                in
-                    { newModel
-                        | playerHand = card :: newModel.playerHand
-                        , message = "You drew the " ++ (Cards.toFullString card)
-                    }
+        Just card ->
+            let
+                newModel =
+                    reshuffleIfDeckEmpty model
+            in
+            { newModel
+                | playerHand = card :: newModel.playerHand
+                , message = "You drew the " ++ Cards.toFullString card
+            }
 
 
 dealerPlaysCard : Card -> Model -> Model
@@ -89,19 +92,20 @@ dealerPlaysCard card model =
             { model
                 | discardPile = card :: model.discardPile
                 , dealerHand = newDealerHand
-                , message = "Dealer plays the " ++ (Cards.toFullString card)
+                , message = "Dealer plays the " ++ Cards.toFullString card
             }
 
         mostProlificSuit =
             Cards.getMostProlificSuit newDealerHand
     in
-        if Cards.getFaceFromCard card == 8 then
-            { newModel
-                | currentSuit = mostProlificSuit
-                , message = newModel.message ++ "... New suit: " ++ (Cards.toSuitName mostProlificSuit)
-            }
-        else
-            { newModel | currentSuit = Cards.getSuitFromCard card }
+    if Cards.getFaceFromCard card == 8 then
+        { newModel
+            | currentSuit = mostProlificSuit
+            , message = newModel.message ++ "... New suit: " ++ Cards.toSuitName mostProlificSuit
+        }
+
+    else
+        { newModel | currentSuit = Cards.getSuitFromCard card }
 
 
 playerPlaysCard : Card -> Model -> ( Model, Cmd Msg )
@@ -117,17 +121,18 @@ playerPlaysCard card model =
                 , message = ""
             }
     in
-        if (Cards.getFaceFromCard card) == 8 then
-            ( askUserForSuit
-                newModel
-            , Cmd.none
-            )
-        else
-            ( { newModel
-                | currentSuit = Cards.getSuitFromCard card
-              }
-            , Utils.postMessage DealersTurn
-            )
+    if Cards.getFaceFromCard card == 8 then
+        ( askUserForSuit
+            newModel
+        , Cmd.none
+        )
+
+    else
+        ( { newModel
+            | currentSuit = Cards.getSuitFromCard card
+          }
+        , Utils.postMessage DealersTurn
+        )
 
 
 reshuffleIfDeckEmpty : Model -> Model
@@ -139,6 +144,7 @@ reshuffleIfDeckEmpty model =
         Just restOfDeck ->
             if List.length restOfDeck == 0 then
                 reshuffle model
+
             else
                 { model
                     | shuffledDeck = restOfDeck
@@ -154,25 +160,25 @@ reshuffle model =
         cardOnTopOfDiscardPile =
             Cards.getDeckTopCard model.discardPile
     in
-        case newDeck of
-            Nothing ->
-                { model
-                    | shuffledDeck = []
-                }
+    case newDeck of
+        Nothing ->
+            { model
+                | shuffledDeck = []
+            }
 
-            Just aNewDeck ->
-                case cardOnTopOfDiscardPile of
-                    Nothing ->
-                        { model
-                            | shuffledDeck = aNewDeck
-                        }
+        Just aNewDeck ->
+            case cardOnTopOfDiscardPile of
+                Nothing ->
+                    { model
+                        | shuffledDeck = aNewDeck
+                    }
 
-                    Just card ->
-                        { model
-                            | shuffledDeck =
-                                Cards.shuffleDeck aNewDeck 1481219015621
-                            , discardPile = [ card ]
-                        }
+                Just card ->
+                    { model
+                        | shuffledDeck =
+                            Cards.shuffleDeck aNewDeck 1481219015621
+                        , discardPile = [ card ]
+                    }
 
 
 getCurrentSuitFromDiscard : List Card -> Suit
@@ -181,12 +187,12 @@ getCurrentSuitFromDiscard cards =
         topOfCards =
             List.head cards
     in
-        case topOfCards of
-            Nothing ->
-                Hearts
+    case topOfCards of
+        Nothing ->
+            Hearts
 
-            Just card ->
-                Cards.getSuitFromCard card
+        Just card ->
+            Cards.getSuitFromCard card
 
 
 askUserForSuit : Model -> Model
