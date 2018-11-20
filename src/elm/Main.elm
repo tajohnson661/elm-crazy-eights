@@ -1,21 +1,27 @@
-module Main exposing (..)
+module Main exposing (main, mapLoadTime, subscriptions)
 
+import Browser
 import Html exposing (..)
-import Model exposing (Model)
-import Update
 import Messages exposing (..)
+import Model exposing (Model)
 import Ports
+import Update
 import View
+
 
 
 -- APP
 
 
-main : Program Never Model Msg
+main : Program Int Model Msg
 main =
-    Html.program
+    Browser.document
         { init = Model.init
-        , view = View.view
+        , view =
+            \m ->
+                { title = "Crazy Eights with Elm"
+                , body = [ View.view m ]
+                }
         , update = Update.update
         , subscriptions = subscriptions
         }

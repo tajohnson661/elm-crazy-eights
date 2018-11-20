@@ -4,6 +4,7 @@ import Cards exposing (Card, Suit(..))
 import Messages exposing (..)
 
 
+
 -- MODEL
 
 
@@ -19,8 +20,8 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+init : Int -> ( Model, Cmd Msg )
+init flags =
     ( { shuffledDeck = []
       , playerHand = []
       , dealerHand = []

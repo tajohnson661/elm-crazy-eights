@@ -1,12 +1,14 @@
 module View exposing (view)
 
-import Model exposing (Model)
-import Messages exposing (..)
-import Html exposing (Html, div, text, button, span, p, img, h2, h3, h4, h5, h6, ul, li, nav, a, i, footer)
-import Html.Attributes exposing (class, style, src, href, id, attribute)
-import Html.Events exposing (onClick)
-import Cards exposing (Card, Suit(..), Face, getSuitFromCard, getFaceFromCard, sortHand)
+import Browser
+import Cards exposing (Card, Face, Suit(..), getFaceFromCard, getSuitFromCard, sortHand)
 import Dialog
+import Html exposing (Html, a, button, div, footer, h2, h3, h4, h5, h6, i, img, li, nav, p, span, text, ul)
+import Html.Attributes exposing (attribute, class, href, id, src, style)
+import Html.Events exposing (onClick)
+import Messages exposing (..)
+import Model exposing (Model)
+
 
 
 -- VIEW
@@ -59,28 +61,29 @@ viewBody model =
         compareCard =
             List.head model.discardPile
     in
-        case model.inProgress of
-            True ->
-                div [ class "container playingCards simpleCards" ]
-                    [ div [ class "on-top" ]
-                        [ Dialog.view
-                            (if model.showDialog then
-                                Just (dialogConfig model)
-                             else
-                                Nothing
-                            )
-                        ]
-                    , viewDealerHand model.dealerHand
-                    , viewMiddleSection model
-                    , viewMessage model
-                    , viewPlayerHand model compareCard
-                    ]
+    case model.inProgress of
+        True ->
+            div [ class "container playingCards simpleCards" ]
+                [ div [ class "on-top" ]
+                    [ Dialog.view
+                        (if model.showDialog then
+                            Just (dialogConfig model)
 
-            False ->
-                div [ class "row center initial-screen" ]
-                    [ viewMessage model
-                    , button [ class "btn btn-large btn-success", onClick StartShuffle ] [ text "Click to start" ]
+                         else
+                            Nothing
+                        )
                     ]
+                , viewDealerHand model.dealerHand
+                , viewMiddleSection model
+                , viewMessage model
+                , viewPlayerHand model compareCard
+                ]
+
+        False ->
+            div [ class "row center initial-screen" ]
+                [ viewMessage model
+                , button [ class "btn btn-large btn-success", onClick StartShuffle ] [ text "Click to start" ]
+                ]
 
 
 dialogConfig : Model -> Dialog.Config Msg
@@ -141,6 +144,7 @@ viewDrawCard : Model -> Html Msg
 viewDrawCard model =
     if List.length model.shuffledDeck == 0 then
         empty
+
     else
         div [ class "pCard back right pointer", onClick DrawCard ] [ text "*" ]
 
@@ -190,7 +194,7 @@ viewCard card =
 
 viewDiscardPile : List Card -> Html Msg
 viewDiscardPile discardPile =
-    case (List.head discardPile) of
+    case List.head discardPile of
         Nothing ->
             empty
 
@@ -207,8 +211,8 @@ viewCurrentSuit suit =
         color =
             getColorFromSuit suit
     in
-        div [ class "current-suit", style [ ( "color", color ) ] ]
-            [ text suitText ]
+    div [ class "current-suit", style "color" color ]
+        [ text suitText ]
 
 
 paintCard : Card -> Bool -> Html Msg
@@ -223,16 +227,17 @@ paintCard card allowClick =
         classText =
             "pCard " ++ faceClass ++ " " ++ suitClass
     in
-        if allowClick then
-            div [ class ("pointer " ++ classText), onClick (PlayCard card) ]
-                [ span [ class "rank" ] [ text faceText ]
-                , span [ class "suit" ] [ text suitText ]
-                ]
-        else
-            div [ class classText ]
-                [ span [ class "rank" ] [ text faceText ]
-                , span [ class "suit" ] [ text suitText ]
-                ]
+    if allowClick then
+        div [ class ("pointer " ++ classText), onClick (PlayCard card) ]
+            [ span [ class "rank" ] [ text faceText ]
+            , span [ class "suit" ] [ text suitText ]
+            ]
+
+    else
+        div [ class classText ]
+            [ span [ class "rank" ] [ text faceText ]
+            , span [ class "suit" ] [ text suitText ]
+            ]
 
 
 getSuitPaintInfoFromSuit : Suit -> ( String, String )
@@ -267,7 +272,7 @@ getFacePaintInfoFromFace faceValue =
             ( "rank-k", "K" )
 
         _ ->
-            ( "rank-" ++ toString faceValue, toString faceValue )
+            ( "rank-" ++ String.fromInt faceValue, String.fromInt faceValue )
 
 
 getColorFromSuit : Suit -> String

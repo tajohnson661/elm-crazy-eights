@@ -3,6 +3,7 @@ module Utils exposing (listsToTupleList, listsToTupleListMap, postMessage)
 import Task
 
 
+
 -- Combine two lists into a list of tuples... cartesian product I think
 
 
@@ -20,7 +21,7 @@ family : List a -> b -> List ( a, b )
 family list item =
     case list of
         x :: xs ->
-            (,) x item :: family xs item
+            ( x, item ) :: family xs item
 
         _ ->
             []

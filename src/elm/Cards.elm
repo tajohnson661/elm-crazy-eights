@@ -1,24 +1,24 @@
-module Cards
-    exposing
-        ( Card
-        , Face
-        , Suit(..)
-        , shuffleDeck
-        , initialDeck
-        , dealCards
-        , getSuitFromCard
-        , getFaceFromCard
-        , removeCard
-        , getDeckTopCard
-        , getMostProlificSuit
-        , toFullString
-        , sortHand
-        , toSuitName
-        )
+module Cards exposing
+    ( Card
+    , CardsDealt
+    , Face
+    , Suit(..)
+    , dealCards
+    , getDeckTopCard
+    , getFaceFromCard
+    , getMostProlificSuit
+    , getSuitFromCard
+    , initialDeck
+    , removeCard
+    , shuffleDeck
+    , sortHand
+    , toFullString
+    , toSuitName
+    )
 
-import Utils
-import Random
 import Dict exposing (Dict)
+import Random
+import Utils
 
 
 type alias Face =
@@ -36,13 +36,21 @@ type alias Card =
     ( Face, Suit )
 
 
-faces : List Face
-faces =
+type alias CardsDealt =
+    { workingCards : List Card
+    , playerHand : List Card
+    , dealerHand : List Card
+    , discardPile : List Card
+    }
+
+
+allFaces : List Face
+allFaces =
     [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
 
 
-suits : List Suit
-suits =
+allSuits : List Suit
+allSuits =
     [ Hearts, Spades, Clubs, Diamonds ]
 
 
@@ -59,13 +67,13 @@ rlist deck seed =
 
 shuffleDeck : List Card -> Int -> List Card
 shuffleDeck deck seed =
-    List.map2 (,) (rlist deck seed) deck
+    List.map2 (\a b -> ( a, b )) (rlist deck seed) deck
         |> List.sortBy Tuple.first
         |> List.unzip
         |> Tuple.second
 
 
-dealCards : List Card -> ( List Card, List Card, List Card, List Card )
+dealCards : List Card -> CardsDealt
 dealCards deck =
     let
         playerDeck =
@@ -86,7 +94,7 @@ dealCards deck =
         finalDeck =
             List.drop 1 nextRemainingDeck
     in
-        ( finalDeck, playerDeck, dealerDeck, discardPile )
+    { workingCards = finalDeck, playerHand = playerDeck, dealerHand = dealerDeck, discardPile = discardPile }
 
 
 getFaceFromCard : Card -> Face
@@ -128,15 +136,15 @@ getMostProlificSuit cards =
                 |> List.reverse
                 |> List.head
     in
-        case maybeTuple of
-            Nothing ->
-                Hearts
+    case maybeTuple of
+        Nothing ->
+            Hearts
 
-            Just tuple ->
-                suitFromRank (Tuple.first tuple)
+        Just tuple ->
+            suitFromRank (Tuple.first tuple)
 
 
-countThem : Card -> Dict comparable Int -> Dict comparable Int
+countThem : Card -> Dict Int Int -> Dict Int Int
 countThem card currentValues =
     case getSuitFromCard card of
         Hearts ->
@@ -152,28 +160,28 @@ countThem card currentValues =
             addTo Clubs currentValues
 
 
-addTo : Suit -> Dict comparable Int -> Dict comparable Int
+addTo : Suit -> Dict Int Int -> Dict Int Int
 addTo suit dict =
     let
         maybeCurCount =
             Dict.get (rankOfSuit suit) dict
     in
-        case maybeCurCount of
-            Just curCount ->
-                Dict.insert (rankOfSuit suit) (curCount + 1) dict
+    case maybeCurCount of
+        Just curCount ->
+            Dict.insert (rankOfSuit suit) (curCount + 1) dict
 
-            Nothing ->
-                dict
+        Nothing ->
+            dict
 
 
 initialDeck : List Card
 initialDeck =
-    allCards faces suits
+    allCards allFaces allSuits
 
 
 toFullString : Card -> String
 toFullString card =
-    (toFaceName (getFaceFromCard card)) ++ " of " ++ (toSuitName (getSuitFromCard card))
+    toFaceName (getFaceFromCard card) ++ " of " ++ toSuitName (getSuitFromCard card)
 
 
 toFaceName : Face -> String
@@ -192,7 +200,7 @@ toFaceName faceValue =
             "King"
 
         _ ->
-            (toString faceValue)
+            String.fromInt faceValue
 
 
 toSuitName : Suit -> String
@@ -232,19 +240,23 @@ cardCompare a b =
         rankOfFaceB =
             rankOfFace (getFaceFromCard b)
     in
-        if rankOfSuitB < rankOfSuitA then
-            LT
-        else if rankOfSuitB > rankOfSuitA then
-            GT
-        else if rankOfFaceB < rankOfFaceA then
-            LT
-        else if rankOfFaceB > rankOfFaceA then
-            GT
-        else
-            EQ
+    if rankOfSuitB < rankOfSuitA then
+        LT
+
+    else if rankOfSuitB > rankOfSuitA then
+        GT
+
+    else if rankOfFaceB < rankOfFaceA then
+        LT
+
+    else if rankOfFaceB > rankOfFaceA then
+        GT
+
+    else
+        EQ
 
 
-rankOfSuit : Suit -> comparable
+rankOfSuit : Suit -> Int
 rankOfSuit suit =
     case suit of
         Spades ->
@@ -260,7 +272,7 @@ rankOfSuit suit =
             1
 
 
-suitFromRank : comparable -> Suit
+suitFromRank : Int -> Suit
 suitFromRank suitValue =
     case suitValue of
         4 ->
